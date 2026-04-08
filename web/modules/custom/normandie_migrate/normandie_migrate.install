@@ -1,0 +1,245 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the normandie_migrate module.
+ */
+
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_install().
+ * 
+ * Crée le champ field_tags sur le type de contenu page après l'installation
+ * du module, car ce champ dépend du vocabulaire 'actus' qui est créé
+ * par la migration.
+ */
+function normandie_migrate_install() {
+  // Créer le champ field_tags sur le type de contenu page
+  if (!\Drupal::entityTypeManager()->getStorage('field_config')->load('node.page.field_tags')) {
+    $field_config = FieldConfig::create([
+      'field_name' => 'field_tags',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'label' => 'Catégorie',
+      'description' => 'Catégorie de l\'actualité',
+      'required' => FALSE,
+      'translatable' => TRUE,
+      'settings' => [
+        'handler' => 'default:taxonomy_term',
+        'handler_settings' => [
+          'target_bundles' => [
+            'actus' => 'actus',
+          ],
+          'sort' => [
+            'field' => '_none',
+          ],
+          'auto_create' => FALSE,
+        ],
+      ],
+    ]);
+    $field_config->save();
+    
+    \Drupal::logger('normandie_migrate')->notice('Champ field_tags (Catégorie) créé sur le type de contenu page');
+  } else {
+    // Si le champ existe déjà, s'assurer qu'il pointe vers 'actus'
+    $field_config = \Drupal::entityTypeManager()->getStorage('field_config')->load('node.page.field_tags');
+    $settings = $field_config->getSetting('handler_settings');
+    if (!isset($settings['target_bundles']['actus'])) {
+      $settings['target_bundles'] = ['actus' => 'actus'];
+      $field_config->setSetting('handler_settings', $settings);
+      $field_config->set('label', 'Catégorie');
+      $field_config->save();
+      \Drupal::logger('normandie_migrate')->notice('Champ field_tags reconfiguré pour utiliser le vocabulaire actus');
+    }
+  }
+  
+  // Ajouter le champ au formulaire d'édition
+  $form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.page.default');
+  if ($form_display) {
+    $content = $form_display->get('content');
+    if (!isset($content['field_tags'])) {
+      $content['field_tags'] = [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 32,
+        'region' => 'content',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'match_limit' => 10,
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'third_party_settings' => [],
+      ];
+      $form_display->set('content', $content);
+      $form_display->save();
+      \Drupal::logger('normandie_migrate')->notice('Champ Catégorie ajouté au formulaire d\'édition');
+    }
+  }
+  
+  // Ajouter le champ à l'affichage
+  $view_display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('node.page.default');
+  if ($view_display) {
+    $content = $view_display->get('content');
+    if (!isset($content['field_tags'])) {
+      $content['field_tags'] = [
+        'type' => 'entity_reference_label',
+        'label' => 'above',
+        'weight' => 100,
+        'region' => 'content',
+        'settings' => [
+          'link' => TRUE,
+        ],
+        'third_party_settings' => [],
+      ];
+      $view_display->set('content', $content);
+      $view_display->save();
+      \Drupal::logger('normandie_migrate')->notice('Champ Catégorie ajouté à l\'affichage');
+    }
+  }
+}
+
+/**
+ * Configure field_tags on page content type (field config + form/view displays).
+ * 
+ * Ce hook est exécuté automatiquement par drush updatedb pendant la migration.
+ * Il configure le champ field_tags avec le vocabulaire 'actus' et l'ajoute
+ * aux displays de formulaire et de vue.
+ */
+function normandie_migrate_update_10001() {
+  $config_factory = \Drupal::configFactory();
+
+  // Le champ field_tags est déjà créé par le fichier YAML dans config/install/.
+  // On met juste à jour le vocabulaire cible pour utiliser 'actus' au lieu de 'tags'.
+  $field_config = $config_factory->getEditable('field.field.node.page.field_tags');
+  
+  if (!$field_config->isNew()) {
+    $field_config->set('settings.handler_settings.target_bundles', [
+      'actus' => 'actus',
+    ]);
+    $field_config->save();
+  }
+
+  // Clear field definition cache so the new field is recognized.
+  \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+}
+
+/**
+ * Add field_tags to form display and view display for page content type.
+ */
+function normandie_migrate_update_10002() {
+  $config_factory = \Drupal::configFactory();
+
+  // Add field_tags to the form display.
+  $form_display = $config_factory->getEditable('core.entity_form_display.node.page.default');
+
+  if (!$form_display->isNew()) {
+    $content = $form_display->get('content') ?? [];
+    
+    // Only add if not already present.
+    if (!isset($content['field_tags'])) {
+      $content['field_tags'] = [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 32,
+        'region' => 'content',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'match_limit' => 10,
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'third_party_settings' => [],
+      ];
+      $form_display->set('content', $content);
+
+      // Add field_tags to dependencies.
+      $dependencies = $form_display->get('dependencies.config') ?? [];
+      if (!in_array('field.field.node.page.field_tags', $dependencies)) {
+        $dependencies[] = 'field.field.node.page.field_tags';
+        $form_display->set('dependencies.config', $dependencies);
+      }
+
+      $form_display->save();
+    }
+  }
+
+  // Add field_tags to the view display.
+  $view_display = $config_factory->getEditable('core.entity_view_display.node.page.default');
+
+  if (!$view_display->isNew()) {
+    $content = $view_display->get('content') ?? [];
+    
+    // Only add if not already present.
+    if (!isset($content['field_tags'])) {
+      $content['field_tags'] = [
+        'type' => 'entity_reference_label',
+        'label' => 'above',
+        'weight' => 101,
+        'region' => 'content',
+        'settings' => [
+          'link' => TRUE,
+        ],
+        'third_party_settings' => [],
+      ];
+      $view_display->set('content', $content);
+
+      // Add field_tags to dependencies.
+      $dependencies = $view_display->get('dependencies.config') ?? [];
+      if (!in_array('field.field.node.page.field_tags', $dependencies)) {
+        $dependencies[] = 'field.field.node.page.field_tags';
+        $view_display->set('dependencies.config', $dependencies);
+      }
+
+      $view_display->save();
+    }
+  }
+}
+
+/**
+ * Corriger la configuration du champ field_tags : vocabulaire actus, label Catégorie, position.
+ * 
+ * Cette mise à jour s'exécute automatiquement pendant la migration pour corriger
+ * toutes les configurations du champ Catégorie.
+ */
+function normandie_migrate_update_10003() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  
+  // 1. Corriger le champ field_tags : vocabulaire actus + label Catégorie
+  $field_config = $entity_type_manager->getStorage('field_config')->load('node.page.field_tags');
+  if ($field_config) {
+    $field_config->setSetting('handler_settings', [
+      'target_bundles' => [
+        'actus' => 'actus',
+      ],
+      'sort' => [
+        'field' => '_none',
+      ],
+      'auto_create' => FALSE,
+    ]);
+    $field_config->set('label', 'Catégorie');
+    $field_config->set('description', 'Catégorie de l\'actualité');
+    $field_config->save();
+    \Drupal::logger('normandie_migrate')->notice('Champ field_tags reconfiguré : vocabulaire actus, label Catégorie');
+  }
+  
+  // 2. Positionner le champ après le corps (weight 32) dans le formulaire
+  $form_display = $entity_type_manager->getStorage('entity_form_display')->load('node.page.default');
+  if ($form_display) {
+    $content = $form_display->get('content');
+    if (isset($content['field_tags'])) {
+      $content['field_tags']['weight'] = 32;
+      $content['field_tags']['type'] = 'entity_reference_autocomplete';
+      $content['field_tags']['settings'] = [
+        'match_operator' => 'CONTAINS',
+        'match_limit' => 10,
+        'size' => 60,
+        'placeholder' => '',
+      ];
+      $form_display->set('content', $content);
+      $form_display->save();
+      \Drupal::logger('normandie_migrate')->notice('Champ Catégorie repositionné après le Corps (weight 32)');
+    }
+  }
+  
+  return 'Champ Catégorie configuré correctement : vocabulaire actus, label Catégorie, position après Corps.';
+}

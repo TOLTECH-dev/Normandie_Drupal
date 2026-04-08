@@ -1,0 +1,27 @@
+tarteaucitron-core:
+  version: '10.5.6'
+  header: true
+  js:
+    js/tarteaucitron.min.js: { minified: true, preprocess: false }
+  css:
+    theme:
+      js/css/tarteaucitron.min.css: { minified: true, preprocess: false }
+  dependencies:
+    - core/jquery
+
+tarteaucitron-services:
+  version: '10.5.6'
+  header: true
+  js:
+    js/tarteaucitron.services.min.js: { minified: true, preprocess: false }
+  dependencies:
+    - tarteaucitron/tarteaucitron-core
+
+tarteaucitron-main:
+  version: '10.5.6'
+  header: true
+  js:
+    js/init_tarteaucitron.js: { preprocess: false }
+  dependencies:
+    - tarteaucitron/tarteaucitron-services
+    - core/drupal

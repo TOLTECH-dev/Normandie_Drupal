@@ -1,0 +1,42 @@
+id: d7_url_alias
+label: 'D7 URL Aliases (Path Aliases)'
+migration_group: normandie_migrate
+
+source:
+  plugin: d7_url_alias
+  key: migrate
+  constants:
+    slash: '/'
+
+process:
+  # Le path interne (ex: /node/65) - ajouter / au début si absent
+  path:
+    plugin: concat
+    delimiter: ''
+    source:
+      - constants/slash
+      - source
+  
+  # L'alias (ex: /content/aide-audit) - ajouter / au début si absent
+  alias:
+    plugin: concat
+    delimiter: ''
+    source:
+      - constants/slash
+      - alias
+  
+  langcode:
+    plugin: default_value
+    default_value: und
+
+destination:
+  plugin: 'entity:path_alias'
+
+migration_dependencies:
+  required:
+    - d7_node_complete_page
+    - d7_node_complete_cartographie
+    - d7_user
+    - d7_taxonomy_term_actus
+    - d7_taxonomy_term_tags
+  optional: []

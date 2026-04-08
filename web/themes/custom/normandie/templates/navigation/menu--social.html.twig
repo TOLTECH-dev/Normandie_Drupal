@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * Theme override to display the social menu with icons.
+ * 
+ * STRUCTURE MATCHING D7 BOOTSTRAP THEME:
+ * - Uses class 'socials' instead of 'menu menu--social'
+ * - Renders social links with proper icons and classes
+ * - Matches AddToAny (a2a) structure from D7
+ */
+#}
+
+{%- set attributes = attributes.addClass('socials') -%}
+
+{%- if items -%}
+  <ul{{ attributes }}>
+    {%- for item in items -%}
+      <li>
+        {%- if item.url -%}
+          {%- set social_class = '' -%}
+          {%- set data_icon = '' -%}
+          
+          {%- if item.title is defined and item.title -%}
+            {%- if 'facebook' in item.title|lower -%}
+              {%- set social_class = 'facebook a2a_button_facebook' -%}
+              {%- set data_icon = 'facebook' -%}
+            {%- elseif 'twitter' in item.title|lower -%}
+              {%- set social_class = 'twitter a2a_button_twitter' -%}
+              {%- set data_icon = 'twitter' -%}
+            {%- elseif 'linkedin' in item.title|lower -%}
+              {%- set social_class = 'a2a_button_linkedin linkedin' -%}
+              {%- set data_icon = 'linkedin' -%}
+            {%- elseif 'print' in item.title|lower -%}
+              {%- set social_class = 'print' -%}
+              {%- set data_icon = 'print' -%}
+            {%- elseif 'viadeo' in item.title|lower -%}
+              {%- set social_class = 'a2a_button_viadeo viadeo' -%}
+              {%- set data_icon = 'viadeo' -%}
+            {%- endif -%}
+          {%- endif -%}
+          
+          {{ link(item.title, item.url, { class: social_class, 'data-url': 'https://cheque-eco-energie.normandie.fr/', 'target': '_blank', 'rel': 'nofollow noopener' }) }}
+        {%- else -%}
+          {{ item.title }}
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

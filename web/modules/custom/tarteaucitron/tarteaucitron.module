@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Tarteaucitron module - Cookie consent management for Normandie region.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function tarteaucitron_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#tarteaucitron":
+      return "<p>Ce module ajoute Tarteaucitron.js pour la gestion du consentement aux cookies.</p>";
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function tarteaucitron_page_attachments(array &$attachments) {
+  // Get Matomo configuration (hardcoded defaults for now).
+  $matomo_site_id = '49';
+  $matomo_url_http = 'https://stats.normandie.cloud-ed.fr/';
+  $matomo_url_https = 'https://stats.normandie.cloud-ed.fr/';
+
+  // Attach Matomo configuration script.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'script',
+      '#value' => 'window.matomoConfig = {
+          matomo_site_id: "' . $matomo_site_id . '",
+          matomo_url_http: "' . $matomo_url_http . '",
+          matomo_url_https: "' . $matomo_url_https . '"
+      };',
+    ],
+    'matomo_config',
+  ];
+
+  // Attach Tarteaucitron JS files.
+  $attachments['#attached']['library'][] = 'tarteaucitron/tarteaucitron-main';
+}

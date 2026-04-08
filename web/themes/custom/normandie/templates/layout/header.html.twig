@@ -1,0 +1,63 @@
+{#
+/**
+ * @file
+ * Theme override for header section - Normandie Theme D10
+ * Shared header structure for all pages
+ */
+#}
+
+{#
+/**
+ * @file
+ * Complete Header template - Normandie Theme D10
+ * 
+ * Includes ALL header elements for both page types
+ * Reproduces D7 header structure exactly:
+ * 
+ * Structure:
+ * 1. <header> with navigation_top + navigation_before_top
+ * 2. Main Navigation Menu (.region-menu-main)
+ * 3. Secondary Navigation Menu (.region-menu-secondary)
+ */
+#}
+
+<header id="navbar" role="banner" class="site-header container">
+  {# Navigation Top Region - Social Icons (Dark bar) #}
+  {% if page.navigation_top %}
+    <div class="region region-navigation-top">
+      {{ page.navigation_top }}
+    </div>
+  {% endif %}
+
+  {# Navigation Before Top Region - Logos & Branding (White bar) #}
+  {% if page.navigation_before_top %}
+    <div class="region region-navigation-before-top">
+      {{ page.navigation_before_top }}
+    </div>
+  {% endif %}
+
+</header>
+
+{# Main Navigation Menu (Orange bar) #}
+{% if page.navigation %}
+  <div class="region-menu-main{{ is_front ? ' front-page' : '' }}">
+    <nav>
+      <div class="container">
+        <span class="menu-mobile">Menu mobile</span>
+        {{ page.navigation }}
+      </div>
+    </nav>
+  </div>
+{% endif %}
+
+{# Secondary Navigation Menu (Level 2) #}
+{# Display extracted secondary menu items (children of active main menu item) #}
+{% if secondary_menu_items %}
+  <div class="region region-menu-secondary">
+    <nav>
+      <div class="container">
+        {% include '@normandie/navigation/secondary-menu-items.html.twig' %}
+      </div>
+    </nav>
+  </div>
+{% endif %}

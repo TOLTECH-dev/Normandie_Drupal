@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Theme override for the Cartochantier block.
+ * Migrated from D7 with Leaflet map and form filters.
+ */
+#}
+
+<div class="row">
+  <section class="col-lg-8 col-md-12 px-4">
+    <h1 class="page-header"><span class="custom-color-text-h1-page-header">La Région</span> Normandie vous aide</h1>
+    <div id="map" class="map-responsive"></div>
+    <div id="progress" style="display: none;">
+      <div id="progress-bar"></div>
+    </div>
+  </section>
+
+  <aside class="col-lg-4 col-md-12">
+    <div class="region region-sidebar-second">
+      <div class="bloc-form white">
+        <form>
+          <div class="wrap-form">
+            <div class="wrap-select">
+              <select id="chantier" name="chantier">
+                <option value="" selected="selected">Type d'aide</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="counties_codes" name="counties_codes">
+                <option value="" selected="selected">Code département</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="postal_codes" name="postal_codes">
+                <option value="" selected="selected">Code postal</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="towns" name="towns">
+                <option value="" selected="selected">Ville</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="epci" name="epci">
+                <option value="" selected="selected">Intercommunalité</option>
+              </select>
+            </div>
+            <input id="search" type="submit" value="Rechercher" />
+            <a href="#" id="reset">Réinitialiser</a>
+            <p class="wrap-btn center">
+              <a id="download" href="#" class="dl">Télécharger<br>la liste</a>
+            </p>
+          </div>
+        </form>
+        <div class="infos">
+          <ul class="legende">
+            <li class="orange">Audit en cours</li>
+            <li class="blue">Audit terminé</li>
+            <li class="red">Travaux en cours</li>
+            <li class="green">Travaux terminés</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

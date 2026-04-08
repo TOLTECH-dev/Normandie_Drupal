@@ -1,0 +1,21 @@
+name: Normandie
+description: 'Thème personnalisé Normandie Drupal 10 - Bootstrap 5'
+type: theme
+base theme: false
+core_version_requirement: ^10
+package: Custom Themes
+
+regions:
+  navigation_top: Navigation Top
+  navigation_before_top: Navigation Before Top
+  navigation: Navigation Principale
+  subnavigation: Navigation Secondaire (Niveau 2)
+  header: Top Bar
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  sidebar_first: Sidebar Left
+  sidebar_second: Colonne de droite
+  footer: Footer
+  page_top: Page Top
+  page_bottom: Page Bottom

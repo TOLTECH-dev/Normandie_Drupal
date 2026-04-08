@@ -1,0 +1,5 @@
+name: 'Normandie Filter'
+type: module
+description: 'Filtre les actualités par taxonomy term ID=2 sur la page liste-actus uniquement'
+core_version_requirement: ^10 || ^11
+package: 'Custom'

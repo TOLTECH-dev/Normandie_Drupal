@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Template for liste_actus unformatted rows - Page display
+ * Simple list without odd/even classes (as requested)
+ *
+ * Available variables:
+ * - rows: Array of row objects with content and attributes
+ * - view: The view object
+ */
+#}
+
+{% for row in rows %}
+  <div class="views-row views-row-{{ loop.index }}{% if loop.first %} views-row-first{% endif %}{% if loop.last %} views-row-last{% endif %}">
+    {{- row.content -}}
+  </div>
+{% endfor %}

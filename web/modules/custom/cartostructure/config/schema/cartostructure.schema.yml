@@ -1,0 +1,3 @@
+page_node_id:
+  type: integer
+  label: 'Page Node ID'

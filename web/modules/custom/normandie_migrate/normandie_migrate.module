@@ -1,0 +1,577 @@
+<?php
+
+/**
+ * @file
+ * Normandie Migrate module.
+ */
+
+use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\Core\Database\Database;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
+/**
+ * Helper function to add leading slash to path if missing.
+ */
+function normandie_migrate_add_slash($path) {
+  return '/' . ltrim($path, '/');
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Synchronize paragraph field definitions after each cron run.
+ * This prevents "Entity/field definitions mismatch" errors.
+ */
+function normandie_migrate_cron() {
+  $field_manager = \Drupal::service('entity_field.manager');
+  $field_definitions = $field_manager->getFieldStorageDefinitions('paragraph');
+
+  // Check if paragraph fields exist.
+  if (!isset($field_definitions['field_titre']) || !isset($field_definitions['field_contenu'])) {
+    // Fields don't exist yet, nothing to sync.
+    return;
+  }
+
+  try {
+    // Method 1: Update via EntityDefinitionUpdateManager.
+    $update_manager = \Drupal::entityDefinitionUpdateManager();
+    $update_manager->updateFieldStorageDefinition($field_definitions['field_titre']);
+    $update_manager->updateFieldStorageDefinition($field_definitions['field_contenu']);
+
+    // Method 2: Force update the key-value store with active definitions.
+    $entity_last_installed = \Drupal::keyValue('entity.definitions.installed');
+    $installed = $entity_last_installed->get('paragraph.field_storage_definitions', []);
+    $installed['field_titre'] = $field_definitions['field_titre'];
+    $installed['field_contenu'] = $field_definitions['field_contenu'];
+    $entity_last_installed->set('paragraph.field_storage_definitions', $installed);
+
+    // Method 3: Clear all entity definition caches.
+    \Drupal::service('entity_type.manager')->clearCachedDefinitions();
+    $field_manager->clearCachedFieldDefinitions();
+
+    \Drupal::logger('normandie_migrate')->info('Auto-synchronized paragraph field definitions after cron.');
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('normandie_migrate')->error('Failed to sync field definitions: @error', ['@error' => $e->getMessage()]);
+  }
+}
+
+/**
+ * Implements hook_migration_plugins_alter().
+ *
+ * Alters the native d7_field_collection migration to include field mapping
+ * for colonne_de_droite paragraphs.
+ */
+function normandie_migrate_migration_plugins_alter(&$migrations) {
+  // This hook is not used - we use post-update instead.
+}
+
+/**
+ * Hydrate colonne_de_droite paragraphs with field data after migration.
+ *
+ * This runs after d7_field_collection:colonne_de_droite has created
+ * the paragraphs.
+ */
+function normandie_migrate_post_update_hydrate_colonne_de_droite_fields(&$sandbox) {
+  try {
+    // Get connection to D7 source database.
+    $d7_db = Database::getConnection('default', 'd7_source');
+  }
+  catch (\Exception $e) {
+    return 'D7 source database not available - skipping hydration.';
+  }
+
+  $d10_database = \Drupal::database();
+
+  // Get the mapping from D7 field_collection_item to D10 paragraphs.
+  $mapping = [];
+  $migrate_mappings = $d10_database->query(
+    "SELECT sourceid1, destid1 FROM migrate_map_d7_field_collection__colonne_de_droite"
+  );
+  foreach ($migrate_mappings as $row) {
+    $mapping[$row->sourceid1] = $row->destid1;
+  }
+
+  if (empty($mapping)) {
+    return 'No paragraph migrations found - skipping hydration.';
+  }
+
+  // Get all field_collection items with their fields from D7.
+  $items = $d7_db->query(
+    "SELECT
+      fci.item_id,
+      ft.field_titre_value,
+      fc.field_contenu_value,
+      fc.field_contenu_format
+    FROM field_collection_item fci
+    LEFT JOIN field_data_field_titre ft
+      ON fci.item_id = ft.entity_id
+      AND ft.entity_type = 'field_collection_item'
+    LEFT JOIN field_data_field_contenu fc
+      ON fci.item_id = fc.entity_id
+      AND fc.entity_type = 'field_collection_item'
+    WHERE fci.field_name = 'field_colonne_de_droite'
+    ORDER BY fci.item_id"
+  );
+
+  $processed = 0;
+  $errors = 0;
+
+  foreach ($items as $item) {
+    $d7_id = $item->item_id;
+    $d10_id = $mapping[$d7_id] ?? NULL;
+
+    if (!$d10_id) {
+      continue;
+    }
+
+    try {
+      $paragraph = Paragraph::load($d10_id);
+      if (!$paragraph) {
+        continue;
+      }
+
+      // Set field_titre if available.
+      if (!empty($item->field_titre_value)) {
+        $paragraph->set('field_titre', $item->field_titre_value);
+      }
+
+      // Set field_contenu if available.
+      if (!empty($item->field_contenu_value)) {
+        $paragraph->set('field_contenu', [
+          'value' => $item->field_contenu_value,
+          'format' => $item->field_contenu_format ?: 'basic_html',
+        ]);
+      }
+
+      // Save the paragraph.
+      $paragraph->save();
+      $processed++;
+    }
+    catch (\Exception $e) {
+      $errors++;
+      \Drupal::logger('normandie_migrate')->error(
+        'Error hydrating paragraph @id: @error',
+        ['@id' => $d10_id, '@error' => $e->getMessage()]
+          );
+    }
+  }
+
+  return "Hydrated $processed paragraphs with field data. Errors: $errors";
+}
+
+/**
+ * Create paragraph bundle fields BEFORE migration runs.
+ *
+ * This ensures field_titre and field_contenu exist on colonne_de_droite
+ * bundle.
+ */
+function normandie_migrate_post_update_create_paragraph_fields(&$sandbox) {
+  // Fields are now created from config/install YAML files
+  // This function just ensures they exist (config is already imported)
+  $field_title_storage = FieldStorageConfig::loadByName('paragraph', 'field_titre');
+  $field_content_storage = FieldStorageConfig::loadByName('paragraph', 'field_contenu');
+
+  if (!$field_title_storage || !$field_content_storage) {
+    throw new \Exception('Paragraph fields must be installed from config/install YAML files first');
+  }
+
+  return 'Paragraph fields (titre and contenu) verified from configuration.';
+}
+
+/**
+ * Implements hook_post_update_NAME().
+ */
+function normandie_migrate_post_update_create_field_colonne_de_droite(&$sandbox) {
+  // Create the field_colonne_de_droite field on node:page bundle.
+  // First, create field storage.
+  $existing = FieldStorageConfig::loadByName('node', 'field_colonne_de_droite');
+
+  if (!$existing) {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_colonne_de_droite',
+      'entity_type' => 'node',
+      'type' => 'entity_reference_revisions',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'settings' => [
+        'target_type' => 'paragraph',
+      ],
+    ]);
+    $field_storage->save();
+  }
+
+  // Then, create field instance on page bundle.
+  $existing_config = FieldConfig::loadByName('node', 'page', 'field_colonne_de_droite');
+
+  if (!$existing_config) {
+    $field_config = FieldConfig::create([
+      'field_storage' => FieldStorageConfig::loadByName('node', 'field_colonne_de_droite'),
+      'bundle' => 'page',
+      'label' => 'Colonne de Droite',
+      'settings' => [
+        'handler' => 'default:paragraph',
+        'handler_settings' => [
+          'target_bundles' => [
+            'colonne_de_droite' => 'colonne_de_droite',
+          ],
+          'negate' => 0,
+          'target_bundles_drag_drop' => [
+            'colonne_de_droite' => [
+              'weight' => 0,
+              'enabled' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ]);
+    $field_config->save();
+  }
+}
+
+/**
+ * Configure field_colonne_de_droite display on form and view.
+ */
+function normandie_migrate_post_update_configure_field_displays(&$sandbox) {
+  // Configure FORM DISPLAY for page bundle.
+  $form_display = EntityFormDisplay::load('node.page.default');
+
+  if ($form_display) {
+    // Add the component to the form display.
+    $form_display->setComponent('field_colonne_de_droite', [
+      'type' => 'paragraphs',
+      'region' => 'content',
+      'settings' => [
+        'title' => 'Paragraph',
+        'title_plural' => 'Paragraphs',
+        'edit_mode' => 'closed',
+        'add_mode' => 'dropdown',
+        'form_display_mode' => 'default',
+        'default_paragraph_type' => 'colonne_de_droite',
+      ],
+      // Place at bottom of form.
+      'weight' => 99,
+    ])->save();
+  }
+
+  // Configure VIEW DISPLAY for page bundle.
+  $view_display = EntityViewDisplay::load('node.page.default');
+
+  if ($view_display) {
+    // Add the component to the view display.
+    $view_display->setComponent('field_colonne_de_droite', [
+      'type' => 'entity_reference_revisions_entity_view',
+      'region' => 'content',
+      'label' => 'above',
+      'settings' => [
+        'view_mode' => 'default',
+        'link' => '',
+      ],
+      // Place at bottom of view.
+      'weight' => 99,
+    ])->save();
+  }
+
+  return 'Configured field_colonne_de_droite display on page bundle form and view.';
+}
+
+/**
+ * Configure paragraph bundle form and view displays.
+ *
+ * Shows titre and contenu fields.
+ */
+function normandie_migrate_post_update_configure_paragraph_display(&$sandbox) {
+  // Configure FORM DISPLAY for colonne_de_droite paragraph bundle.
+  $para_form_display = EntityFormDisplay::load('paragraph.colonne_de_droite.default');
+
+  if (!$para_form_display) {
+    // Create if doesn't exist.
+    $para_form_display = EntityFormDisplay::create([
+      'targetEntityType' => 'paragraph',
+      'bundle' => 'colonne_de_droite',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+  }
+
+  // Configure field_titre in form.
+  $para_form_display->setComponent('field_titre', [
+    'type' => 'text_textfield',
+    'region' => 'content',
+    'weight' => 0,
+    'settings' => [
+      'size' => 60,
+      'placeholder' => '',
+    ],
+  ]);
+
+  // Configure field_contenu in form.
+  $para_form_display->setComponent('field_contenu', [
+    'type' => 'text_textarea',
+    'region' => 'content',
+    'weight' => 1,
+    'settings' => [
+      'rows' => 5,
+      'placeholder' => '',
+    ],
+  ]);
+
+  $para_form_display->save();
+
+  // Configure VIEW DISPLAY for colonne_de_droite paragraph bundle.
+  $para_view_display = EntityViewDisplay::load('paragraph.colonne_de_droite.default');
+
+  if (!$para_view_display) {
+    // Create if doesn't exist.
+    $para_view_display = EntityViewDisplay::create([
+      'targetEntityType' => 'paragraph',
+      'bundle' => 'colonne_de_droite',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+  }
+
+  // Configure field_titre in view.
+  $para_view_display->setComponent('field_titre', [
+    'type' => 'string',
+    'label' => 'above',
+    'region' => 'content',
+    'weight' => 0,
+    'settings' => [],
+  ]);
+
+  // Configure field_contenu in view.
+  $para_view_display->setComponent('field_contenu', [
+    'type' => 'string',
+    'label' => 'above',
+    'region' => 'content',
+    'weight' => 1,
+    'settings' => [],
+  ]);
+
+  $para_view_display->save();
+
+  return 'Configured paragraph colonne_de_droite form and view displays with titre and contenu fields.';
+}
+
+/**
+ * Create preview display for paragraphs to show in closed form mode.
+ */
+function normandie_migrate_post_update_create_paragraph_preview_display(&$sandbox) {
+  // Create PREVIEW DISPLAY for colonne_de_droite paragraph bundle.
+  $para_preview_display = EntityViewDisplay::load('paragraph.colonne_de_droite.preview');
+
+  if (!$para_preview_display) {
+    $para_preview_display = EntityViewDisplay::create([
+      'targetEntityType' => 'paragraph',
+      'bundle' => 'colonne_de_droite',
+      'mode' => 'preview',
+      'status' => TRUE,
+    ]);
+  }
+
+  // Configure field_titre in preview (show above content)
+  $para_preview_display->setComponent('field_titre', [
+    'type' => 'string',
+    'label' => 'hidden',
+    'region' => 'content',
+    'weight' => 0,
+    'settings' => [],
+  ]);
+
+  // Configure field_contenu in preview (show trimmed)
+  $para_preview_display->setComponent('field_contenu', [
+    'type' => 'text_summary_or_trimmed',
+    'label' => 'hidden',
+    'region' => 'content',
+    'weight' => 1,
+    'settings' => [
+      'trim_length' => 150,
+    ],
+  ]);
+
+  $para_preview_display->save();
+
+  // Update the node form display to use preview mode for closed paragraphs.
+  $form_display = EntityFormDisplay::load('node.page.default');
+  if ($form_display) {
+    $component = $form_display->getComponent('field_colonne_de_droite');
+    if ($component) {
+      $component['settings']['preview_view_mode'] = 'preview';
+      $form_display->setComponent('field_colonne_de_droite', $component)->save();
+    }
+  }
+
+  return 'Created preview display for paragraph colonne_de_droite.';
+}
+
+/**
+ * Attach migrated paragraphs to nodes via Entity API.
+ *
+ * This uses the migration mapping tables to resolve migrated
+ * paragraph IDs.
+ */
+function normandie_migrate_post_update_attach_paragraphs_to_nodes(&$sandbox) {
+  try {
+    // Get connection to D7 source database.
+    $d7_db = Database::getConnection('default', 'd7_source');
+  }
+  catch (\Exception $e) {
+    // D7 source database not available, skip.
+    return 'D7 source database not available - skipping attachment.';
+  }
+
+  $d10_database = \Drupal::database();
+
+  // Get paragraph ID mappings from migration table.
+  $mapping = [];
+  $migrate_mappings = $d10_database->query(
+    "SELECT sourceid1, destid1 FROM migrate_map_d7_field_collection__colonne_de_droite"
+  );
+  foreach ($migrate_mappings as $row) {
+    $mapping[$row->sourceid1] = $row->destid1;
+  }
+
+  // Get all paragraph attachments from D7 source.
+  $attachments = $d7_db->query(
+    "SELECT entity_id, field_colonne_de_droite_value, delta
+     FROM field_data_field_colonne_de_droite
+     WHERE entity_type = 'node'
+     ORDER BY entity_id, delta"
+  );
+
+  // Group by node ID with mapped paragraph IDs.
+  $nodes_paragraphs = [];
+  foreach ($attachments as $row) {
+    $nid = $row->entity_id;
+    $d7_pid = $row->field_colonne_de_droite_value;
+
+    // Look up D10 paragraph ID.
+    $d10_pid = $mapping[$d7_pid] ?? NULL;
+    if (!$d10_pid) {
+      continue;
+    }
+
+    if (!isset($nodes_paragraphs[$nid])) {
+      $nodes_paragraphs[$nid] = [];
+    }
+    $nodes_paragraphs[$nid][] = $d10_pid;
+  }
+
+  // Attach paragraphs to nodes via Entity API.
+  foreach ($nodes_paragraphs as $nid => $paragraph_ids) {
+    $node = Node::load($nid);
+    if (!$node) {
+      continue;
+    }
+
+    // Clear any existing field_colonne_de_droite values.
+    $node->set('field_colonne_de_droite', []);
+
+    // Add paragraphs in order.
+    foreach ($paragraph_ids as $d10_pid) {
+      // Check if paragraph exists and get its current revision ID.
+      $para_data = $d10_database->query(
+        "SELECT id, revision_id FROM {paragraphs_item} WHERE id = :id",
+        [':id' => $d10_pid]
+      )->fetchObject();
+
+      if ($para_data) {
+        $node->field_colonne_de_droite->appendItem([
+          'target_id' => $para_data->id,
+          'target_revision_id' => $para_data->revision_id,
+        ]);
+      }
+    }
+
+    // Save the node.
+    $node->save();
+  }
+
+  return 'Attached migrated paragraphs to nodes using migration mapping.';
+}
+
+/**
+ * Callback for migrate:process to get D7 role permissions and map to D10.
+ *
+ * @param int $rid
+ *   The D7 role ID.
+ *
+ * @return array
+ *   Array of D10 permission names.
+ */
+function normandie_migrate_get_role_permissions($rid) {
+  try {
+    $d7_db = \Drupal\Core\Database\Database::getConnection('default', 'd7_source');
+  }
+  catch (\Exception $e) {
+    $d7_db = \Drupal\Core\Database\Database::getConnection('default', 'default');
+  }
+
+  // Query D7 permissions for this role
+  $query = $d7_db->select('role_permission', 'rp')
+    ->fields('rp', ['permission'])
+    ->condition('rp.rid', $rid);
+
+  $d7_permissions = $query->execute()->fetchCol();
+
+  // Map D7 permissions to D10
+  $permission_map = [
+    'create page content' => 'create page content',
+    'edit own page content' => 'edit own page content',
+    'edit any page content' => 'edit any page content',
+    'delete own page content' => 'delete own page content',
+    'delete any page content' => 'delete any page content',
+    'create cartographie content' => 'create cartographie content',
+    'edit own cartographie content' => 'edit own cartographie content',
+    'edit any cartographie content' => 'edit any cartographie content',
+    'delete own cartographie content' => 'delete own cartographie content',
+    'delete any cartographie content' => 'delete any cartographie content',
+    'access content' => 'access content',
+    'access content overview' => 'access content overview',
+    'access administration pages' => 'access administration pages',
+    'access site in maintenance mode' => 'access site in maintenance mode',
+    'access toolbar' => 'access toolbar',
+    'access dashboard' => 'access dashboard',
+    'view the administration theme' => 'view the administration theme',
+    'administer taxonomy' => 'administer taxonomy',
+    'delete terms in 1' => 'delete terms in actus',
+    'edit terms in 1' => 'edit terms in actus',
+    'delete terms in 2' => 'delete terms in tags',
+    'edit terms in 2' => 'edit terms in tags',
+    'administer menu' => 'administer menu',
+    'administer menu attributes' => 'administer menu',
+    'administer url aliases' => 'administer url aliases',
+    'create url aliases' => 'create url aliases',
+    'administer blocks' => 'administer blocks',
+    'administer languages' => 'administer languages',
+    'translate interface' => 'translate interface',
+    'use text format filtered_html' => 'use text format basic_html',
+    'use text format full_html' => 'use text format full_html',
+    'view files' => 'view media',
+    'access comments' => 'access comments',
+    'post comments' => 'post comments',
+    'skip comment approval' => 'skip comment approval',
+    'search content' => 'search content',
+    'access site-wide contact form' => 'access site-wide contact form',
+    'access site reports' => 'access site reports',
+    'access library reports' => 'access site reports',
+    // 'block IP addresses' in D7 is an admin-only permission in D10
+    // Do NOT map to 'administer users' for non-admin roles
+    'block IP addresses' => NULL,
+    'access shortcuts' => 'access shortcuts',
+  ];
+
+  $d10_permissions = [];
+  foreach ($d7_permissions as $permission) {
+    if (isset($permission_map[$permission])) {
+      $d10_permissions[] = $permission_map[$permission];
+    }
+  }
+
+  return array_unique($d10_permissions);
+}

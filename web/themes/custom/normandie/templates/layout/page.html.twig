@@ -1,0 +1,145 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page - Normandie Theme D10
+ * Migrated from D7 page.tpl.php with all original logic preserved
+ *
+ * @see bootstrap_preprocess_page()
+ * @see template_preprocess()
+ * @see template_preprocess_page()
+ */
+#}
+
+{% set showTitle = showTitle is not null ? showTitle : false %}
+
+{# showTitle is calculated in normandie_preprocess_page() hook #}
+{# Generate page class from URL alias (e.g., /Rénovations-réussies -> page-renovations-reussies) #}
+{% set pageClass = 'page-wrapper' %}
+{% if current_path %}
+  {# Remove leading/trailing slashes and convert to lowercase, then sanitize for CSS class #}
+  {% set cleanPath = current_path | trim('/', 'left') | trim('/', 'right') | lower %}
+  {% if cleanPath %}
+    {# Replace special characters with hyphens for valid CSS class name #}
+    {# Handle accented characters by converting them #}
+    {% set pageIdentifier = cleanPath | replace({
+      'à': 'a', 'á': 'a', 'â': 'a', 'ä': 'a',
+      'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
+      'ï': 'i', 'î': 'i',
+      'ô': 'o', 'ö': 'o',
+      'ù': 'u', 'û': 'u', 'ü': 'u',
+      'ç': 'c',
+      ' ': '-',
+      '_': '-',
+      '/': '-'
+    }) | replace({'--': '-'}) %}
+    {% set pageClass = pageClass ~ ' page-' ~ pageIdentifier %}
+  {% endif %}
+{% endif %}
+
+<div id="page" class="{{ pageClass }}">
+
+  {# Page Top Region #}
+  {% if page.page_top %}
+    <div id="page-top" class="page-top">
+      {{ page.page_top }}
+    </div>
+  {% endif %}
+
+  {# ============ HEADER STRUCTURE (D7-compatible) ============ #}
+  {% include '@normandie/layout/header.html.twig' %}
+  {# ============ END HEADER ============ #}
+
+  {# Highlighted Section (Hero Banner) #}
+  {% if page.highlighted %}
+    <div id="highlighted" class="highlighted-section">
+      <div class="container">
+        {{ page.highlighted }}
+      </div>
+    </div>
+  {% endif %}
+
+  {# Main Content Area #}
+  <div id="main" class="main-container">
+    <div class="container">
+      
+      {# Help Region #}
+      {% if page.help %}
+        <div id="help" class="help-region">
+          {{ page.help }}
+        </div>
+      {% endif %}
+
+      {# Breadcrumb #}
+      {% if page.breadcrumb %}
+        <div id="breadcrumb" class="breadcrumb-region">
+          {{ page.breadcrumb }}
+        </div>
+      {% endif %}
+
+      <div class="row">
+        
+        {# Main Content - Structure conditionnelle comme D7 #}
+        <section{% if node and node.field_colonne_de_droite is not empty %} class="col-lg-8 col-md-12"{% else %} class="col-sm-12"{% endif %}>
+          <a id="main-content" tabindex="-1"></a>
+          
+          {# Display page title for node content - only if showTitle is true #}
+          {% if showTitle and node %}
+            <h1 class="page-header">{{ node.label }}</h1>
+          {% endif %}
+          
+          {# Node content #}
+          {% if node %}
+            {% if node.body.value %}
+              <div class="node-body">
+                {{ node.body.processed | raw }}
+              </div>
+            {% endif %}
+            
+            {% if trouver_conseiller_block %}
+              {{ trouver_conseiller_block }}
+            {% elseif chiffrescles_block %}
+              {{ chiffrescles_block }}
+            {% endif %}
+          {% elseif page.content %}
+            {{ page.content }}
+          {% endif %}
+          
+        </section>
+
+        {% if node and node.field_colonne_de_droite is not empty %}
+          <aside class="col-lg-4 col-md-12">
+            <div class="region region-sidebar-second">
+              
+              {% for paragraph in node.field_colonne_de_droite %}
+                {% set paragraph_entity = paragraph.entity %}
+                {% if paragraph_entity %}
+                  <div class="bloc-big">
+                    {% if paragraph_entity.field_titre.value %}
+                      <h2>{{ paragraph_entity.field_titre.value }}</h2>
+                    {% endif %}
+                    <div class="content-bloc-big">
+                      {{ paragraph_entity.field_contenu.value | raw }}
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              
+            </div>
+          </aside>
+        {% endif %}        
+      </div>
+    </div>
+    {% if cartostructure_block %}
+      {{ cartostructure_block }}
+    {% endif %}
+    {% if carto_block %}
+      {{ carto_block }}
+    {% endif %}
+    {% if cartochantier_block %}
+      {{ cartochantier_block }}
+    {% endif %}
+  </div>
+
+  {% include '@normandie/layout/footer.html.twig' %}
+
+</div>{# /#page #}

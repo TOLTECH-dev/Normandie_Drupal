@@ -1,0 +1,62 @@
+# Drupal core
+/web/core
+/web/modules/contrib
+/web/themes/contrib
+/web/profiles/contrib
+
+# Vendor files
+/vendor
+
+# Build files
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated files
+web/sites/*/files
+web/sites/*/private
+web/sites/default/files/css
+web/sites/default/files/js
+web/sites/default/files/styles
+
+# Tmp files
+tmp/
+temp/
+*.log
+
+# Internal development notes and references
+.internal/
+
+# PHPUnit
+phpunit.xml
+phpunit.xml.dist
+
+# Local development
+.env
+.env.local
+
+
+# Backup files
+backups/*
+
+#log files
+logs/*
+
+# Local settings
+web/sites/default/settings.local.php
+
+# Bootstrap setup scripts
+scripts/setup_blocks_from_config.sh
+scripts/setup_menus.sh
+
+# Obsolete files
+config/blocks/blocks_config.yml
+

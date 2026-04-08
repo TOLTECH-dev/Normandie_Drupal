@@ -1,0 +1,48 @@
+id: d7_user
+label: 'Users'
+migration_group: normandie_migrate
+migration_tags:
+  - 'Drupal 7'
+  - Content
+
+source:
+  plugin: d7_user
+  key: migrate
+
+process:
+  uid: uid
+  name: name
+  pass: pass
+  mail: mail
+  created: created
+  access: access
+  login: login
+  status: status
+  timezone: timezone
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: und
+  
+  preferred_langcode:
+    plugin: default_value
+    default_value: und
+  
+  preferred_admin_langcode:
+    plugin: default_value
+    default_value: und
+  
+  init: init
+  
+  roles:
+    plugin: migration_lookup
+    migration: d7_user_role
+    source: roles
+
+destination:
+  plugin: 'entity:user'
+
+migration_dependencies:
+  required:
+    - d7_user_role
+  optional: []

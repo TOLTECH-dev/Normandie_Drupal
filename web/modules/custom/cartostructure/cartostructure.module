@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Cartostructure module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function cartostructure_theme(): array {
+  return [
+    'cartostructure' => [
+      'variables' => [],
+    ],
+  ];
+}

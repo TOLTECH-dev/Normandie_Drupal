@@ -1,0 +1,38 @@
+id: d7_user_role
+label: 'User roles'
+migration_group: normandie_migrate
+migration_tags:
+  - 'Drupal 7'
+  - Configuration
+
+source:
+  plugin: d7_user_role
+  key: migrate
+
+process:
+  id:
+    plugin: static_map
+    source: rid
+    map:
+      1: anonymous
+      2: authenticated
+      3: administrator
+    bypass: true
+  label: name
+  weight: weight
+  is_admin:
+    plugin: static_map
+    source: rid
+    map:
+      3: true
+    default_value: false
+  permissions:
+    plugin: migrate_d7_permissions
+    source: rid
+
+destination:
+  plugin: 'entity:user_role'
+
+migration_dependencies:
+  required: []
+  optional: []

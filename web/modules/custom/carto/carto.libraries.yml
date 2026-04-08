@@ -1,0 +1,15 @@
+carto_lib:
+  css:
+    theme:
+      css/site.css: {}
+      css/leaflet.css: {}
+      css/MarkerCluster.css: {}
+      css/MarkerCluster.Default.css: {}
+  js:
+    js/leaflet.js: {}
+    js/leaflet.markercluster-src.js: {}
+    js/map.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once

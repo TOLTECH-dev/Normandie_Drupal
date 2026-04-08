@@ -1,0 +1,18 @@
+langcode: und
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_titre
+    - paragraphs.paragraphs_type.colonne_de_droite
+id: paragraph.colonne_de_droite.field_titre
+field_name: field_titre
+entity_type: paragraph
+bundle: colonne_de_droite
+label: Titre
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

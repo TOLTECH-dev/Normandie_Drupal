@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Row template for liste_actus view - Block display
+ * Renders each row as a slideshow slide (D7 compatible)
+ * Without odd/even classes as requested
+ */
+#}
+
+{% for row in rows %}
+  <div class="views-slideshow-cycle-main-frame-row views_slideshow_cycle_slide views_slideshow_slide views-row views-row-{{ loop.index }}{% if loop.first %} views-row-first{% endif %}{% if loop.last %} views-row-last{% endif %}">
+    <div class="views-slideshow-cycle-main-frame-row-item views-row views-row-0">
+      {{- row.content -}}
+    </div>
+  </div>
+{% endfor %}

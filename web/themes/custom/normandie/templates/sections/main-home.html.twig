@@ -1,0 +1,82 @@
+{#
+/**
+ * @file
+ * Main Home Section - Normandie Homepage Hero Section
+ * 
+ * D7 Structure Reproduction:
+ * - Hero banner image
+ * - Left section with "Rénovez votre maison" call-to-action
+ * - Right section with details about aide audit/travaux
+ * 
+ * This template is ONLY included on the homepage (page--front.html.twig)
+ * 
+ * Available variables:
+ * - theme_path: Path to the Normandie theme
+ */
+#}
+
+<div class="main-home">
+  {# Hero Banner Image #}
+  <img 
+    src="{{ theme_path }}/img/bannierecouple.png" 
+    alt="Rénover votre maison avec l'aide de la région"
+  >
+  
+  <div class="container bloc-large-home">
+    {# Left Section - Main Call-to-Action #}
+    <div class="left-main-home">
+      <p>
+        <strong>Rénovez<br>votre maison</strong>
+      </p>
+      <p>
+        <strong>La région <span>vous aide</span></strong>
+      </p>
+    </div>
+    
+    {# Right Section - Details and Benefits #}
+    <div class="right-main-home">
+      <p>
+        <img 
+          src="{{ theme_path }}/img/svg/house.svg" 
+          alt="Icône maison"
+        >
+        Vous êtes propriétaire d'une maison :<br>
+        - de plus de 15&nbsp;ans<br>
+        - en résidence principale, secondaire ou locative<br>
+      </p>
+      
+      <p>
+        <strong>Vous pouvez bénéficier&nbsp;d'un&nbsp;:</strong>
+      </p>
+      
+      {# Two Column Layout for Cheques #}
+      <div class="colonnes_2">
+        <div class="col1">
+          <p><strong>cheque audit</strong></p>
+          <img 
+            src="{{ theme_path }}/img/svg/picto1.svg" 
+            alt="Icône chèque audit"
+          >
+          <p>
+            <small>d'un montant de 600&nbsp;€</small>
+          </p>
+        </div>
+        <div class="col1">
+          <p><strong>cheque travaux</strong></p>
+          <img 
+            src="{{ theme_path }}/img/svg/picto2.svg" 
+            alt="Icône chèque travaux"
+          >
+          <p>
+            <small>d'un montant allant de 6&nbsp;500 à 12&nbsp;000&nbsp;€</small>
+          </p>
+        </div>
+      </div>
+      
+      {# Call-to-Action Button #}
+      <p class="wrap-btn">
+        <a href="{{ url('entity.node.canonical', {'node': 65}) }}">Voir les modalités</a>
+      </p>
+    </div>
+  </div>
+</div>

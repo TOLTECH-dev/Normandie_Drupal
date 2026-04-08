@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Theme template for Carto map display.
+ *
+ * Available variables:
+ * - title: The title of the carto block
+ * - isAuditeur: Boolean indicating if user is an auditor
+ */
+#}
+
+<div class="row">
+    <section class="col-lg-8 col-md-12 p-0">
+        <h1 class="page-header"><span class="custom-color-text-h1-page-header"></span></h1>
+        <div class="region region-content">
+            <div id="map" class="map-responsive"></div>
+        </div>
+    </section>
+
+    <aside class="col-lg-4 col-md-12 p-0">
+        <div class="region region-sidebar-second">
+            <div class="bloc-form white">
+                {% if isAuditeur == 1 %}
+                    <p><strong>Je suis un professionnel, 
+                        <a href="/devenir-auditeur">Je souhaite rejoindre le réseau.</a>
+                    </strong></p>
+                {% else %}
+                    <p><strong>Je suis un professionnel,
+                        <a href="/devenir-renovateur-bbc">Je souhaite rejoindre le réseau.</a>
+                    </strong></p>
+                {% endif %}
+
+                <form>
+                    <div class="wrap-form">
+                        <div class="form-line">
+                            <p>Je recherche un professionnel conventionné :</p>
+                        </div>
+                        {% if isAuditeur == 1 %}
+                            <input type="hidden" id="partners" name="partners" value="0"/>
+                        {% else %}
+                            <input type="hidden" id="partners" name="partners" value="1"/>
+                        {% endif %}
+                        <div class="wrap-select">
+                            <select id="counties_codes" name="counties_codes">
+                                <option value="" selected="selected">Département</option>
+                            </select>
+                        </div>
+                        <div class="wrap-select" style="display:none">
+                            <select id="postal_codes" name="postal_codes">
+                                <option value="" selected="selected">Code postal</option>
+                            </select>
+                        </div>
+                        <div class="wrap-select" style="display:none">
+                            <select id="ville" name="towns">
+                                <option value="" selected="selected">Ville</option>
+                            </select>
+                        </div>
+                        <input id="search" type="submit" value="Rechercher" />
+                        <a id="reset" href="#">Réinitialiser</a>
+
+                        <p class="wrap-btn center">
+                            <a id="export" href="#" class="dl">Télécharger<br>le résultat de la recherche</a>
+                        </p>
+                    </div>
+                </form>
+                <div class="infosBBC">
+                    {% if isAuditeur != 1 %}
+                        <img src="{{ base_path ~ 'themes/custom/normandie/img/LOGO_ARPENormandie.png' }}" style="margin-right:20px;" height="35%" width="35%" alt="ARP Normandie Logo">
+                        <a href="https://arpenormandie.org/acteurs-ecoconstruction/" target="_blank">La cartographie des professionnels de l'éco-construction en Normandie</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>

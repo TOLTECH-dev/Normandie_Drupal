@@ -1,0 +1,23 @@
+langcode: fr
+status: true
+dependencies:
+  module:
+    - trouver_conseiller
+  theme:
+    - normandie
+id: normandie_trouverconseiller
+theme: normandie
+region: content
+weight: 0
+provider: null
+plugin: trouver_conseiller_block
+settings:
+  id: trouver_conseiller_block
+  label: 'Trouver un conseiller'
+  label_display: '0'
+  provider: trouver_conseiller
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/trouver-un-conseiller'

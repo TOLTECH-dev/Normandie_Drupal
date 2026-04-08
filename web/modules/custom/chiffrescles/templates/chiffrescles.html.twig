@@ -1,0 +1,76 @@
+<div class="row">
+    <section class="col-lg-8 col-md-12">
+        <div class="region region-content">
+            <form>
+                <div class="wrap-select two_cols">
+                    <div class="wrap-select">
+                        <select id="type" name="type">
+                            <option value="" selected="selected">Type d'aide</option>
+                        </select>
+                    </div>
+                    <div class="wrap-select">
+                        <select id="epci" name="epci">
+                            <option value="" selected="selected">Intercommunalité</option>
+                        </select>
+                    </div>
+                    <div class="wrap-select">
+                        <select id="counties_codes" name="counties_codes">
+                            <option value="" selected="selected">Code département</option>
+                        </select>
+                    </div>
+                    <div class="wrap-select">
+                        <select id="ville" name="ville">
+                            <option value="" selected="selected">Ville</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="chiffres-cles">
+                <div class="bloc-cf">
+                    <img src="{{ theme_path }}/img/svg/casier.svg" alt="" />
+                    <p><strong>Demandes en cours</strong></p>
+                    <p class="number">
+                        <span id="dossier"> </span>
+                    </p>
+                </div>
+                <div class="bloc-cf">
+                    <img src="{{ theme_path }}/img/svg/ckeck.svg" alt="" />
+                    <p><strong>Auditeurs</strong></p>
+                    <p class="number">
+                        <span id="auditeur"> </span>
+                    </p>
+                </div>
+                <div class="bloc-cf">
+                    <img src="{{ theme_path }}/img/svg/brush.svg" alt="" />
+                    <p><strong>Rénovateurs</strong></p>
+                    <p class="number">
+                        <span id="renovateur"> </span>
+                    </p>
+                </div>
+                <div class="bloc-cf">
+                    <img src="{{ theme_path }}/img/svg/guy.svg" alt="" />
+                    <p><strong>Permanences conseillers</strong></p>
+                    <p class="number">
+                        <span id="permanence"> </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <aside class="col-lg-4 col-md-12">
+        <div class="region region-sidebar-second">
+
+            <div class="bloc-big chiffres-cles">
+                <h2>Chèques eco-énergie accordés</h2>
+                <div class="content-bloc-big">
+                    <img src="{{ theme_path }}/img/svg/shape1.svg" alt="" />
+                    <p class="number">
+                        <span id="cheque"> </span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+</div>

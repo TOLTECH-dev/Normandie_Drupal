@@ -1,0 +1,68 @@
+{% if items %}
+  <ul class="pagination">
+
+    {# First page #}
+    {% if items.first %}
+      <li class="pager-first">
+        <a href="{{ items.first.href }}"{{ items.first.attributes }}>
+          <<
+        </a>
+      </li>
+    {% endif %}
+
+    {# Previous page #}
+    {% if items.previous %}
+      <li class="prev">
+        <a href="{{ items.previous.href }}"{{ items.previous.attributes }}>
+          <
+        </a>
+      </li>
+    {% endif %}
+
+    {# Ellipsis BEFORE pages #}
+    {% if ellipses.previous %}
+      <li class="pager-ellipsis disabled"><span>…</span></li>
+    {% endif %}
+
+    {# Page numbers #}
+    {% for key, page in items.pages %}
+      {% if page.attributes['aria-current'] is defined %}
+        <li class="active">
+          <span>{{ key }}</span>
+        </li>
+      {% else %}
+        <li>
+          <a href="{{ page.href }}"
+             title="{{ 'Aller à la page @page'|t({'@page': key}) }}"
+             {{ page.attributes }}>
+            {{ key }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {# Ellipsis AFTER pages #}
+    {% if ellipses.next %}
+      <li class="pager-ellipsis disabled"><span>…</span></li>
+    {% endif %}
+
+    {# Next page #}
+    {% if items.next %}
+      <li class="next">
+        <a href="{{ items.next.href }}"{{ items.next.attributes }}>
+          >
+        </a>
+      </li>
+    {% endif %}
+
+    {# Last page #}
+    {% if items.last %}
+      <li class="pager-last">
+        <a href="{{ items.last.href }}"{{ items.last.attributes }}>
+          >>
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+{% endif %}

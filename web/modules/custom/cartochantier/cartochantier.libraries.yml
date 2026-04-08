@@ -1,0 +1,28 @@
+cartochantier:
+  version: 1.0
+  css:
+    theme:
+      css/cartochantier.css: {}
+      css/leaflet.css: {}
+      css/MarkerCluster.css: {}
+      css/MarkerCluster.Default.css: {}
+  js:
+    js/leaflet.js: {}
+    js/leaflet.markercluster-src.js: {}
+    js/cartochantier.js: {}
+  dependencies:
+    - core/jquery
+
+cartochantier-styles:
+  version: 1.0
+  css:
+    theme:
+      css/cartochantier.css: {}
+
+cartochantier-scripts:
+  version: 1.0
+  js:
+    js/cartochantier.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

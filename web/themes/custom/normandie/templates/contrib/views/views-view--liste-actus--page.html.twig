@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Template for liste_actus page display
+ * Adds proper View container classes for CSS targeting and styling
+ * 
+ * Available variables:
+ * - attributes: HTML attributes for the view wrapper
+ * - rows: The rendered rows/content of the view
+ * - header: Optional header content
+ * - footer: Optional footer content
+ * - pager: Pagination element
+ * - view: The view object itself
+ * - display_id: The display mode ID
+ * - dom_id: The unique DOM ID for this view instance
+ */
+#}
+
+<div class="view view-{{ view.id }} view-id-{{ view.id }} view-display-id-{{ display_id }}{{ dom_id ? ' view-dom-id-' ~ dom_id }}">
+  {% if header %}
+    <div class="view-header">
+      {{ header }}
+    </div>
+  {% endif %}
+
+  <div class="view-content">
+    {{ rows }}
+  </div>
+
+  {% if pager %}
+    <div class="text-center">
+      {{ pager }}
+    </div>
+  {% endif %}
+
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
+    </div>
+  {% endif %}
+</div>

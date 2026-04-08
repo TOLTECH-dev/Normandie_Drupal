@@ -1,0 +1,3 @@
+services:
+  normandie_core.validator:
+    class: Drupal\normandie_core\Validator\NormandieValidator

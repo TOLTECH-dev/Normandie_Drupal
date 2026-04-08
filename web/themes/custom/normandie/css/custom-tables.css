@@ -1,0 +1,104 @@
+/**
+ * Custom Table Styles - Normandie Theme D10
+ * 
+ * Override Bootstrap 5 table variables and styles to maintain D7 appearance
+ * These styles apply to .main-container table elements
+ */
+
+/* ============================================================
+   OVERRIDE Bootstrap CSS Variables for .main-container tables
+   ============================================================ */
+
+.main-container table {
+  --bs-table-bg: #f2f2f2;
+  --bs-table-border-color: #ddd;
+  --bs-table-striped-bg: #ffffff;
+  --bs-table-hover-bg: #e8e8e8;
+  --bs-table-active-bg: #e0e0e0;
+  
+  background-color: #f2f2f2;
+  max-width: 100%;
+}
+
+.main-container table td,
+.main-container table th {
+  padding: 30px;
+  border-color: #ddd;
+}
+
+/* Show borders for tables WITHOUT inline styles */
+.main-container table:not([style]) td,
+.main-container table:not([style]) th {
+  /* Show borders between columns (vertical lines) */
+  border-left: 1px solid #000 !important;
+  border-right: 1px solid #000 !important;
+  border-top: 1px solid #000 !important;
+  border-bottom: 1px solid #000 !important;
+}
+
+.main-container table thead th {
+  background-color: #e8e8e8;
+  --bs-table-bg: #e8e8e8;
+  border-color: #999;
+}
+
+.main-container table tbody tr td img {
+  max-width: 100%;
+  height: auto;
+}
+
+.main-container table.table-bordered {
+  border: 1px solid #ddd;
+}
+
+.main-container table.table-bordered td,
+.main-container table.table-bordered th {
+  border-color: #ddd;
+}
+
+/* ============================================================
+   Responsive Tables
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .main-container table tr {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .main-container table tr td {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    text-align: left;
+  }
+
+  .main-container table tr td[data-label]:before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ============================================================
+   Table variations
+   ============================================================ */
+
+.main-container table.table-striped tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.main-container table.table-striped tbody tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.main-container table.table-hover tbody tr:hover {
+  background-color: #f0f0f0 !important;
+}
+
+.main-container table.table-sm td,
+.main-container table.table-sm th {
+  padding: 15px;
+}

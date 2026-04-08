@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Theme override to display a single Drupal page while offline.
+ */
+#}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    <head-placeholder token="{{ placeholder_token|raw }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token|raw }}">
+    <js-placeholder token="{{ placeholder_token|raw }}">
+  </head>
+  <body{{ attributes }}>
+    <div id="page-wrapper">
+      <div id="page">
+        <img src="{{ base_path ~ directory }}/logo.png" alt="{{ 'Home'|t }}" width="500" class="displayed"/>
+        
+        <main role="main" id="main-content">
+          {% if title %}
+            <h2>{{ title }}</h2>
+          {% endif %}
+
+          {% if page.content %}
+            {{ page.content }}
+          {% endif %}
+        </main>
+
+      </div>
+    </div>
+
+    {{ page_bottom }}
+    <js-bottom-placeholder token="{{ placeholder_token|raw }}">
+  </body>
+</html>

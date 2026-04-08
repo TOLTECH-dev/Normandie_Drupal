@@ -1,0 +1,45 @@
+id: colonne_droite
+label: 'Migrate Field Collection Items to Paragraphs'
+migration_group: normandie_migrate
+status: false
+
+source:
+  plugin: sql
+  database: d7_source
+  query: |
+    SELECT
+      fci.item_id,
+      fci.field_name,
+      ft.field_titre_value AS titre,
+      fc.field_contenu_value AS contenu,
+      fc.field_contenu_format AS format
+    FROM field_collection_item fci
+    LEFT JOIN field_data_field_titre ft 
+      ON fci.item_id = ft.entity_id 
+      AND ft.entity_type = 'field_collection_item'
+    LEFT JOIN field_data_field_contenu fc 
+      ON fci.item_id = fc.entity_id 
+      AND fc.entity_type = 'field_collection_item'
+    WHERE fci.field_name = 'field_colonne_de_droite'
+
+destination:
+  plugin: entity:paragraph
+  default_bundle: bloc_colonne_droite
+
+process:
+  type:
+    plugin: default_value
+    default_value: bloc_colonne_droite
+  field_titre:
+    plugin: get
+    source: titre
+  field_contenu:
+    plugin: get
+    source: contenu
+  field_contenu/format:
+    plugin: default_value
+    default_value: basic_html
+
+migration_dependencies:
+  required: []
+  optional: []

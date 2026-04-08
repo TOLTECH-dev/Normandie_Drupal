@@ -1,0 +1,8 @@
+name: 'Cartostructure'
+type: module
+description: 'Carte interactive des structures en Normandie'
+core_version_requirement: ^10
+package: 'Normandie'
+dependencies:
+  - drupal:block
+  - normandie_core:normandie_core

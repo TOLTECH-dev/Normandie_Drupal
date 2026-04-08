@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Theme override for social media menu block
+ * Displays social icons in the navigation_top region
+ * 
+ * STRUCTURE MATCHING D7 BOOTSTRAP THEME:
+ * - Uses <section> wrapper (like D7 block.tpl.php)
+ * - Includes contextual-links-region for admin
+ * - Wraps menu in <span class="a2a_kit"> (AddToAny compatibility)
+ * - Includes <div class="container"> for layout
+ */
+#}
+
+<section{{ attributes.addClass('block', 'block-addtoany', 'contextual-links-region', 'clearfix') }}>
+
+  {# Contextual links for admin users #}
+  {% if title_prefix %}
+    {{ title_prefix }}
+  {% endif %}
+
+  {# Social icons container (D7 structure) #}
+  <span class="a2a_kit a2a_kit_size_32 a2a_target addtoany_list" style="line-height: 32px;">
+    <div class="container">
+      {% block content %}
+        {{ content }}
+      {% endblock %}
+    </div>
+  </span>
+
+  {% if title_suffix %}
+    {{ title_suffix }}
+  {% endif %}
+
+</section>

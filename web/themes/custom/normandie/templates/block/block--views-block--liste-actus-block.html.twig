@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Template for block display of liste_actus view
+ * Ensures proper D7 structure with section wrapper
+ * 
+ * Available variables:
+ * - attributes: HTML attributes of the block
+ * - plugin_id: ID of the block plugin
+ * - label: Label/title of the block
+ * - content: The content array
+ * - configuration: Block configuration array
+ * - derivative_plugin_id: ID of the derivative plugin
+ * - entity_id: Block entity ID
+ * - in_preview: Whether in preview mode
+ */
+#}
+
+{# Block wrapper - same as D7 #}
+<div{{ attributes.addClass('block', 'block-views', 'clearfix') }}>
+  
+  {# Block title #}
+  {% if label %}
+    <h2 class="block-title">{{ label }}</h2>
+  {% endif %}
+  
+  {# Block content (the view) #}
+  <div class="block-content">
+    {{ content }}
+  </div>
+  
+</div>

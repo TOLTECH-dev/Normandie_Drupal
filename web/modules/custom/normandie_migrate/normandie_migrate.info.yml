@@ -1,0 +1,10 @@
+name: Normandie Migrate
+description: Migration Field Collection D7 → Paragraphs D10, with taxonomy field_tags on page bundle
+type: module
+core_version_requirement: ^10
+dependencies:
+  - migrate
+  - migrate_plus
+  - paragraphs
+  - entity_reference_revisions
+  - taxonomy

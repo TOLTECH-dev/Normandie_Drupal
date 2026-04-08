@@ -1,0 +1,160 @@
+carto.liste_departement:
+  path: '/get_liste_departementpartenaire'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListeDepartementPartenaire'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.liste_code_postal:
+  path: '/get_liste_code_postal'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListeCodePostal'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.liste_ville:
+  path: '/get_liste_villepartenaire'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListeVillePartenaire'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.liste_epci:
+  path: '/get_liste_epcipartenaire'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListeEpciPartenaire'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.get_partenaires:
+  path: '/get_partenaires'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenaires'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_departement:
+  path: '/get_partenaires_par_departement/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParDepartement'
+  requirements:
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_codepostal:
+  path: '/get_partenaires_par_codepostal/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParCodePostal'
+  requirements:
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_ville:
+  path: '/get_partenaires_par_ville/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParVille'
+  requirements:
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_type:
+  path: '/get_partenaires_par_typepartenaire/{type}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParType'
+  requirements:
+    type: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_type_departement:
+  path: '/get_partenaires_par_type_codedepartement/{type}/code_postal/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParTypeCodeDepartement'
+  requirements:
+    type: '\d+'
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_type_codepostal:
+  path: '/get_partenaires_par_type_codepostal/{type}/code_postal/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParTypeCodePostal'
+  requirements:
+    type: '\d+'
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.partenaires_type_ville:
+  path: '/get_partenaires_par_type_ville/{type}/code_postal/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getPartenairesParTypeVille'
+  requirements:
+    type: '\d+'
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.departements_map:
+  path: '/get_departements_map'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getDepartementsMap'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.get_ville_codepostal:
+  path: '/get_liste_ville_par_codepostal_filtre/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListeVilleParCodepostalFiltre'
+  requirements:
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.get_ville_codedep:
+  path: '/get_liste_ville_par_codedep_filtre/{code}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListeVilleParCodeDepFiltre'
+  requirements:
+    code: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.get_partenaires_epci:
+  path: '/get_liste_partenaires_par_epci/{epciid}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListePartenairesParEpci'
+  requirements:
+    epciid: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.get_partenaires_type_epci:
+  path: '/get_liste_partenaires_par_type_epci/{type}/{epciid}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::getListePartenairesParTypeEpci'
+  requirements:
+    type: '\d+'
+    epciid: '\d+'
+    _access: 'TRUE'
+  methods: [GET]
+
+carto.export:
+  path: '/get_export/{type}'
+  defaults:
+    _controller: '\Drupal\carto\Controller\CartoController::exportCsv'
+  requirements:
+    type: '\d+'
+    _access: 'TRUE'
+  methods: [POST]
+

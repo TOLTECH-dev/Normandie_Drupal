@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ */
+#}
+<article{{ attributes.addClass('node', 'node-' ~ node.bundle) }}>
+
+  {% if not page %}
+    {% set title_classes = 'node__title' %}
+  {% else %}
+    {% set title_classes = 'node__title page-title' %}
+  {% endif %}
+
+  {% if display_submitted %}
+    <footer class="node__meta">
+      {% if author_picture %}
+        <div class="node__author-picture">
+          {{ author_picture }}
+        </div>
+      {% endif %}
+      <div class="node__submitted">
+        {{ 'Submitted by'|t }}
+        <span class="node__author">{{ author_name }}</span>
+        {{ 'on'|t }}
+        <time datetime="{{ node.createdTime|format_date('custom', 'Y-m-dTH:i:sZ') }}" pubdate>
+          {{ node.createdTime|format_date('long') }}
+        </time>
+      </div>
+    </footer>
+  {% endif %}
+
+  <div{{ content_attributes.addClass('node__content') }}>
+    {{ content }}
+  </div>
+
+</article>

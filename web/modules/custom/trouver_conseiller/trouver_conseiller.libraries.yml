@@ -1,0 +1,12 @@
+trouver_conseiller:
+  version: 1.x
+  css:
+    theme:
+      css/trouver_conseiller.css: {}
+  js:
+    js/trouver_conseiller.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once

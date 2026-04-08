@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Cartochantier module for housing assistance mapping and management.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_theme().
+ */
+function cartochantier_theme(): array {
+  return [
+    'cartochantier' => [
+      'variables' => [
+        'title' => NULL,
+      ],
+      'template' => 'cartochantier',
+    ],
+  ];
+}

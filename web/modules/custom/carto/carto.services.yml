@@ -1,0 +1,26 @@
+services:
+  carto.service:
+    class: Drupal\carto\Service\CartoService
+    arguments:
+      - '@database.symfony'
+      - '@logger.channel.carto'
+      - '@extension.path.resolver'
+      - '@normandie_core.validator'
+
+  carto.export_service:
+    class: Drupal\carto\Service\ExportService
+    arguments:
+      - '@database.symfony'
+      - '@logger.channel.carto'
+      - '@carto.service'
+      - '@normandie_core.validator'
+      - '@extension.path.resolver'
+
+  logger.channel.carto:
+    parent: logger.channel_base
+    arguments: ['carto']
+
+  database.symfony:
+    class: Drupal\Core\Database\Connection
+    factory: ['Drupal\Core\Database\Database', 'getConnection']
+    arguments: ['default', 'symfony']

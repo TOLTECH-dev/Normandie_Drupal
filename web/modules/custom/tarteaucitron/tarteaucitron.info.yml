@@ -1,0 +1,6 @@
+name: Tarteaucitron
+description: Module de gestion des cookies pour la Région Normandie
+type: module
+package: RGPD
+version: 1.0
+core_version_requirement: ^10

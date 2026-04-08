@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Container template for liste_actus view
+ * Wraps the view with proper CSS classes for styling
+ * 
+ * Available variables:
+ * - attributes: HTML attributes for the container
+ * - children: The children elements inside the container
+ * - element: The original element array containing element information
+ * - #attributes: Alternative attributes provided by Views
+ */
+#}
+
+{%
+  set classes = [
+    'view',
+    'view-liste-actus',
+    'view-id-liste_actus',
+    view.display_id ? 'view-display-id-' ~ view.display_id : '',
+  ]
+%}
+
+<div {{ attributes.addClass(classes) }}>
+  {{ children }}
+</div>

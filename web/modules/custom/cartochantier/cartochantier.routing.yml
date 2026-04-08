@@ -1,0 +1,212 @@
+cartochantier:
+  path: '/get_demande'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDemande'
+    _title: 'Work site requests'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartochantier.type_demande:
+  path: '/get_type_demande'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getTypeDemande'
+    _title: 'Request types'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartochantier.liste_departement:
+  path: '/get_liste_departement'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getListeDepartement'
+    _title: 'Department list'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartochantier.liste_code_postal:
+  path: '/get_liste_codePostal'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getListeCodePostal'
+    _title: 'Postal code list'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartochantier.liste_ville:
+  path: '/get_liste_ville'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getListeVille'
+    _title: 'City list'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartochantier.liste_epci:
+  path: '/get_liste_epci'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getListeEpci'
+    _title: 'EPCI list'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartochantier.liste_ville_par_code_postal:
+  path: '/get_liste_ville_par_codePostal/{code_postal}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getListeVilleParCodePostal'
+    _title: 'Cities by postal code'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    code_postal: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.demande_par_type:
+  path: '/get_demande_par_type/{type}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDemandParType'
+    _title: 'Requests by type'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    type: '^[1-4]$'
+  options:
+    no_cache: TRUE
+
+cartochantier.liste_ville_par_departement:
+  path: '/get_liste_ville_par_departement/{departement}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getListeVilleParDepartement'
+    _title: 'Cities by department'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    departement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.demande_par_code_postal:
+  path: '/get_demande_par_codePostal/{code_postal}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDemandParCodePostal'
+    _title: 'Requests by postal code'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    code_postal: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.demande_par_departement:
+  path: '/get_demande_par_departement/{departement}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDemandParDepartement'
+    _title: 'Requests by department'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    departement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.demande_par_ville:
+  path: '/get_demande_par_ville/{insee}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDemandParVille'
+    _title: 'Requests by city'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    insee: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.demande_par_epci:
+  path: '/get_demande_par_epci/{epci_id}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDemandParEpci'
+    _title: 'Requests by EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epci_id: '^\d+$'
+  options:
+    no_cache: TRUE
+
+cartochantier.type_demande_par_departement:
+  path: '/get_type_demande_par_departement/{type}/{departement}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getTypeDemandParDepartement'
+    _title: 'Requests by type and department'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    type: '^[1-4]$'
+    departement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.type_demande_par_code_postal:
+  path: '/get_type_demande_par_codepostal/{type}/{code_postal}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getTypeDemandParCodePostal'
+    _title: 'Requests by type and postal code'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    type: '^[1-4]$'
+    code_postal: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.type_demande_par_ville:
+  path: '/get_type_demande_par_ville/{type}/{insee}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getTypeDemandParVille'
+    _title: 'Requests by type and city'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    type: '^[1-4]$'
+    insee: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartochantier.type_demande_par_epci:
+  path: '/get_type_demande_par_epci/{type}/{epci_id}'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getTypeDemandParEpci'
+    _title: 'Requests by type and EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    type: '^[1-4]$'
+    epci_id: '^\d+$'
+  options:
+    no_cache: TRUE
+
+cartochantier.departements_map:
+  path: '/get_departements_map'
+  defaults:
+    _controller: '\Drupal\cartochantier\Controller\CartochantierController::getDepartementsMap'
+    _title: 'Departments map'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE

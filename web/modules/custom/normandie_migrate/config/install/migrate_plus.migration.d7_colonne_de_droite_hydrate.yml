@@ -1,0 +1,35 @@
+id: d7_colonne_de_droite_hydrate
+label: 'Hydrate colonne_de_droite paragraphs with field data'
+migration_group: normandie_migrate
+source:
+  plugin: colonne_droite_source
+  database: d7_source
+destination:
+  plugin: entity:paragraph
+  default_bundle: colonne_de_droite
+process:
+  id:
+    plugin: migration_lookup
+    migration: d7_field_collection:colonne_de_droite
+    source: item_id
+  type:
+    plugin: default_value
+    default_value: colonne_de_droite
+  field_titre:
+    -
+      plugin: get
+      source: field_titre
+    -
+      plugin: skip_on_empty
+      method: process
+  field_contenu:
+    -
+      plugin: get
+      source: field_contenu
+    -
+      plugin: skip_on_empty
+      method: process
+migration_dependencies:
+  required:
+    - d7_field_collection:colonne_de_droite
+  optional: []

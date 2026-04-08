@@ -1,0 +1,32 @@
+trouver_conseiller.ville:
+  path: '/trouver-conseiller/ville'
+  defaults:
+    _controller: '\Drupal\trouver_conseiller\Controller\TrouverConseillerController::getVilles'
+    _title: 'Liste des villes'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+trouver_conseiller.critere:
+  path: '/trouver-conseiller/critere'
+  defaults:
+    _controller: '\Drupal\trouver_conseiller\Controller\TrouverConseillerController::getCritere'
+    _title: 'Critères'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+trouver_conseiller.calcul:
+  path: '/trouver-conseiller/calcul'
+  defaults:
+    _controller: '\Drupal\trouver_conseiller\Controller\TrouverConseillerController::calculate'
+    _title: 'Calcul'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE

@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Custom template to render secondary menu items extracted from main menu.
+ *
+ * D7 STRUCTURE:
+ * The subnavigation region displays children of the active menu item
+ * as a flat list, separate from the main menu.
+ *
+ * D10 ADAPTATION:
+ * This template renders the secondary_menu_items extracted by
+ * normandie_preprocess_page() hook.
+ */
+#}
+
+{%- if secondary_menu_items -%}
+  <ul class="menu nav region-menu-secondary">
+    {%- for item in secondary_menu_items -%}
+      <li class="{% if loop.first %}first{% endif %} {% if loop.last %}last{% endif %} leaf {% if item.in_active_trail %}active-trail active{% endif %}">
+        {%- if item.url -%}
+          {{ link(item.title, item.url, {
+            'class': item.in_active_trail ? ['active-trail', 'active'] : []
+          }) }}
+        {%- else -%}
+          <span class="{% if item.in_active_trail %}active-trail active{% endif %}">{{ item.title }}</span>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

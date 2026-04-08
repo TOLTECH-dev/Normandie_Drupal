@@ -1,0 +1,43 @@
+id: colonne_droite_attach
+label: 'Attach Paragraphs to Nodes'
+migration_group: normandie_migrate
+status: false
+
+source:
+  plugin: sql
+  database: d7_source
+  query: |
+    SELECT
+      entity_id,
+      field_collection_item_id,
+      delta
+    FROM field_data_field_colonne_de_droite
+    WHERE entity_type = 'node'
+    ORDER BY entity_id, delta
+
+destination:
+  plugin: entity:node
+
+process:
+  nid:
+    -
+      plugin: migration_lookup
+      migration: d7_node_complete_page
+      source: entity_id
+    -
+      plugin: skip_on_empty
+      method: process
+  field_colonne_de_droite:
+    -
+      plugin: migration_lookup
+      migration: colonne_droite
+      source: field_collection_item_id
+    -
+      plugin: skip_on_empty
+      method: process
+
+migration_dependencies:
+  required:
+    - colonne_droite
+    - d7_node_complete_page
+  optional: []

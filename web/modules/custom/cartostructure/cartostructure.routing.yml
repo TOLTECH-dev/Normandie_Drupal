@@ -1,0 +1,177 @@
+cartostructure.get_structures:
+  path: '/cartostructure/get-structures'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getStructures'
+    _title: 'Structures'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_liste_structures:
+  path: '/cartostructure/get-liste-structures'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getListeStructures'
+    _title: 'Liste structures'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_liste_departement:
+  path: '/cartostructure/get-liste-departement'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getListeDepartement'
+    _title: 'Liste départements'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_liste_code_postal:
+  path: '/cartostructure/get-liste-code-postal'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getListeCodePostal'
+    _title: 'Liste codes postaux'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_liste_ville:
+  path: '/cartostructure/get-liste-ville'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getListeVille'
+    _title: 'Liste villes'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_liste_epci:
+  path: '/cartostructure/get-liste-epci'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getListeEpci'
+    _title: 'Liste EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_structure:
+  path: '/cartostructure/get-permanences-par-structure/{structure_id}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParStructure'
+    _title: 'Permanences par structure'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    structure_id: '^[SE]\d+$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_departement:
+  path: '/cartostructure/get-permanences-par-departement/{departement}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParDepartement'
+    _title: 'Permanences par département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    departement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_code_postal:
+  path: '/cartostructure/get-permanences-par-code-postal/{code_postal}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParCodePostal'
+    _title: 'Permanences par code postal'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    code_postal: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_ville:
+  path: '/cartostructure/get-permanences-par-ville/{ville}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParVille'
+    _title: 'Permanences par ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    ville: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_epci:
+  path: '/cartostructure/get-permanences-par-epci/{epci_id}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParEpci'
+    _title: 'Permanences par EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epci_id: '^\d+$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_structure_et_departement:
+  path: '/cartostructure/get-permanences-par-structure-et-departement/{structure_id}/{departement}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParStructureEtDepartement'
+    _title: 'Permanences par structure et département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    structure_id: '^[SE]\d+$'
+    departement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_structure_et_code_postal:
+  path: '/cartostructure/get-permanences-par-structure-et-code-postal/{structure_id}/{code_postal}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParStructureEtCodePostal'
+    _title: 'Permanences par structure et code postal'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    structure_id: '^[SE]\d+$'
+    code_postal: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_structure_et_ville:
+  path: '/cartostructure/get-permanences-par-structure-et-ville/{structure_id}/{ville}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParStructureEtVille'
+    _title: 'Permanences par structure et ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    structure_id: '^[SE]\d+$'
+    ville: '^\d{5}$'
+  options:
+    no_cache: TRUE
+
+cartostructure.get_permanences_par_structure_et_epci:
+  path: '/cartostructure/get-permanences-par-structure-et-epci/{structure_id}/{epci_id}'
+  defaults:
+    _controller: '\Drupal\cartostructure\Controller\CartostructureController::getPermanencesParStructureEtEpci'
+    _title: 'Permanences par structure et EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    structure_id: '^[SE]\d+$'
+    epci_id: '^\d+$'
+  options:
+    no_cache: TRUE

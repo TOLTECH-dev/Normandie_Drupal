@@ -1,0 +1,30 @@
+services:
+  trouver_conseiller.ville_service:
+    class: Drupal\trouver_conseiller\Service\VilleService
+    arguments:
+      - '@logger.channel.trouver_conseiller'
+      - '@database.symfony'
+      - '@normandie_core.validator'
+
+  trouver_conseiller.critere_service:
+    class: Drupal\trouver_conseiller\Service\CritereService
+    arguments:
+      - '@logger.channel.trouver_conseiller'
+      - '@database.symfony'
+      - '@normandie_core.validator'
+
+  trouver_conseiller.conseiller_service:
+    class: Drupal\trouver_conseiller\Service\ConseillerService
+    arguments:
+      - '@logger.channel.trouver_conseiller'
+      - '@database.symfony'
+      - '@normandie_core.validator'
+
+  database.symfony:
+    class: Drupal\Core\Database\Connection
+    factory: ['Drupal\Core\Database\Database', 'getConnection']
+    arguments: ['default', 'symfony']
+
+  logger.channel.trouver_conseiller:
+    parent: logger.channel_base
+    arguments: ['trouver_conseiller']

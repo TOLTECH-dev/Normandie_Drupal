@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Theme override for main menu block
+ * Displays main navigation in the navigation region
+ */
+#}
+<nav{{ attributes.addClass('block', 'block-main-menu', 'navbar-container') }} role="navigation">
+  {% block content %}
+    <div{{ content_attributes.addClass('block__content', 'main-menu') }}>
+      {{ content }}
+    </div>
+  {% endblock %}
+</nav>

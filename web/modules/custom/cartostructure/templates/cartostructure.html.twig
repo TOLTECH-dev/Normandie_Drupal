@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * Default theme implementation for cartostructure.
+ *
+ * Available variables:
+ * - None
+ */
+#}
+<div class="row">
+  <section class="col-lg-8 col-md-12 p-0">
+    <h1 class="page-header"><span class="custom-color-text-h1-page-header"></span></h1>
+    <div class="region region-content">
+      <div id="map" class="map-responsive"></div>
+    </div>
+  </section>
+
+  <aside class="col-lg-4 col-md-12 p-0">
+    <div class="region region-sidebar-second">
+      <div class="bloc-form">
+        <nav>
+          <ul>
+            <li><a href="/trouver-un-conseiller">{{ 'Trouver mon conseiller'|t }}</a></li>
+            <li><a href="" class="active">{{ 'Permanences'|t }}</a></li>
+          </ul>
+        </nav>
+        <form>
+          <div class="wrap-form">
+            <div class="wrap-select">
+              <select id="structures" name="structures">
+                <option value="" selected="selected">{{ 'Nom de la structure'|t }}</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="counties_codes" name="counties_codes">
+                <option value="" selected="selected">{{ 'Département'|t }}</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="postal_codes" name="postal_codes">
+                <option value="" selected="selected">{{ 'Code postal'|t }}</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="towns" name="towns">
+                <option value="" selected="selected">{{ 'Ville'|t }}</option>
+              </select>
+            </div>
+            <div class="wrap-select">
+              <select id="epci" name="epci">
+                <option value="" selected="selected">{{ 'Intercommunalité'|t }}</option>
+              </select>
+            </div>
+            <input id="search" type="submit" value="{{ 'Rechercher'|t }}" />
+            <a href="#" id="reset">{{ 'Réinitialiser'|t }}</a>
+          </div>
+        </form>
+        <div class="infos">
+          <img src="/sites/default/files/contents/conseillers_he/logos_conseillers.jpg" width="100%" alt="">
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

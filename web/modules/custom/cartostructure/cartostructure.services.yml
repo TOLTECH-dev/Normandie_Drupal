@@ -1,0 +1,16 @@
+services:
+  cartostructure.cartostructure_service:
+    class: Drupal\cartostructure\Service\CartostructureService
+    arguments:
+      - '@logger.channel.cartostructure'
+      - '@database.symfony'
+      - '@normandie_core.validator'
+
+  logger.channel.cartostructure:
+    parent: logger.channel_base
+    arguments: ['cartostructure']
+
+  database.symfony:
+    class: Drupal\Core\Database\Connection
+    factory: ['Drupal\Core\Database\Database', 'getConnection']
+    arguments: ['default', 'symfony']

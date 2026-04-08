@@ -1,0 +1,43 @@
+<div class="bottom-home">
+  <div class="container">
+    <div class="row">
+      {# Left Column - Votre Démarche + Main Content #}
+      <div class="col-lg-8">
+        <div class="steps">
+          <h2>Votre Démarche</h2>
+          <ul>
+            <li><a href="{{ path('entity.node.canonical', {'node': 71}) }}">Etre conseillé</a></li>
+            <li><a href="{{ path('entity.node.canonical', {'node': 68}) }}">Faire un audit énergétique</a></li>
+            <li><a href="{{ path('entity.node.canonical', {'node': 69}) }}">Réaliser mes travaux</a></li>
+          </ul>
+        </div>
+
+        {# Main Node Content - Display title and body fields only #}
+        {% if node %}
+          <h1 class="hidden">{{ node.label }}</h1>
+          {% if node.body.value %}
+            <div class="node-body">
+              {{ node.body.value | raw }}
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {# Right Column - Actualités Block + BBC Text #}
+      <div class="col-lg-4">
+        {# Actualités Block - Slideshow with Cycle effect #}
+        {% if liste_actus_output %}
+          <div class="actualites-block-wrapper">
+            {{ liste_actus_output }}
+          </div>
+        {% endif %}
+
+        {# BBC Info Text #}
+        <p>
+          Une rénovation BBC de maison individuelle, c'est possible !<br>
+          Pour le démontrer, la Région accompagne depuis 2012 les premières rénovations globales BBC en Normandie.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

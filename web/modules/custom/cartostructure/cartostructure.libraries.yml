@@ -1,0 +1,16 @@
+cartostructure:
+  version: 1.x
+  css:
+    theme:
+      css/leaflet.css: {}
+      css/MarkerCluster.css: {}
+      css/MarkerCluster.Default.css: {}
+      css/site.css: {}
+  js:
+    js/lib/leaflet.js: {}
+    js/lib/leaflet.markercluster-src.js: {}
+    js/cartostructure.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once

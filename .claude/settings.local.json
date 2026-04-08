@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer install:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8888/)",
+      "Bash(netstat -ano)",
+      "Bash(findstr 8888)",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot -h 127.0.0.1 -P 3306 -e \"SELECT 1\")",
+      "Read(//d/MariaDB/bin/**)",
+      "Read(//d//**)",
+      "Read(//c//**)",
+      "Bash(curl -s -w \"\\\\nHTTP_CODE:%{http_code}\" http://localhost:9999/)",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT name, data FROM config WHERE name IN \\(''system.site'', ''system.file'', ''update.settings'', ''xmlsitemap.settings''\\);\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT name FROM config LIMIT 10;\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT name FROM config WHERE data LIKE ''%cheque%'' OR data LIKE ''%normandie%'' OR data LIKE ''%46.18%'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT name, CONVERT\\(data USING utf8\\) as data FROM config WHERE name = ''system.site'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT name, CONVERT\\(data USING utf8\\) as data FROM config WHERE name = ''addtoany.settings'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT name, CONVERT\\(data USING utf8\\) as data FROM config WHERE name = ''cartochantier.settings'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT entity_id, SUBSTRING\\(body_value, 1, 500\\) FROM node__body WHERE body_value LIKE ''%cheque-eco-energie%'' OR body_value LIKE ''%normandie%'' LIMIT 10;\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT entity_id, SUBSTRING\\(body_value, 1, 500\\) FROM block_content__body WHERE body_value LIKE ''%cheque-eco-energie%'' OR body_value LIKE ''%normandie%'' LIMIT 10;\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT entity_id, SUBSTRING\\(field_contenu_value, 1, 500\\) FROM paragraph__field_contenu WHERE field_contenu_value LIKE ''%cheque-eco-energie%'' OR field_contenu_value LIKE ''%normandie%'' LIMIT 10;\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT link__uri, title FROM menu_link_content_data WHERE link__uri LIKE ''%cheque%'' OR link__uri LIKE ''%normandie%'' OR link__uri LIKE ''%http%'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \":*)",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT id, title, link__uri, menu_name FROM menu_link_content_data WHERE title LIKE ''%onnexion%'' OR title LIKE ''%articulier%'' OR title LIKE ''%artenaire%'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT id, title, link__uri, menu_name FROM menu_link_content_data WHERE title LIKE ''%onnexion%'' OR title LIKE ''%articulier%'' OR title LIKE ''%artenaire%'' OR title LIKE ''%space%'';\")",
+      "Bash(\"D:/MariaDB/bin/mysql.exe\" -u root -proot normandie_drupal_d10 -e \"SELECT 1;\")",
+      "Bash(start //B \"D:/MariaDB/bin/mysqld.exe\")"
+    ]
+  }
+}

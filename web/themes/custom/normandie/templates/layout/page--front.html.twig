@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * The doctype, html, head and body tags are not in this template. Instead they
+ * are in the html.html.twig template. You can customize the parameters found
+ * in that file to alter the look and feel of the entire site.
+ *
+ * Available variables:
+ *
+ * General utility variables:
+ * - base_path: The base URL path of the Drupal installation. Will usually be
+ *   "/" unless you have installed Drupal in a subdirectory.
+ * - is_front: A flag indicating if the current page is the front page.
+ * - logged_in: A flag indicating if the user is registered and logged in.
+ * - is_admin: A flag indicating if the user has permission to access
+ *   administration pages.
+ *
+ * Site identity:
+ * - front_page: The URL of the front page. Use this instead of base_path when
+ *   linking to the front page. This includes the language domain or prefix.
+ * - logo: The url of the logo image, as defined in theme settings.
+ * - site_name: The name of the website, as defined in theme settings.
+ * - site_slogan: The slogan of the website, as defined in theme settings.
+ *
+ * Page content (in order of occurrence in the default page.html.twig):
+ * - messages: Status and error messages. Should be displayed prominently.
+ * - tabs: Tabs that follow any message presented to the user.
+ * - node: Fully loaded node, if there is an object match for the route.
+ * - breadcrumb: The breadcrumb trail for the current page.
+ *
+ * Region variables:
+ * - page.navigation_top: Items for the navigation-top region.
+ * - page.navigation_before_top: Items for the navigation-before-top region.
+ * - page.navigation: Items for the primary navigation region.
+ * - page.header: Items for the header region.
+ * - page.highlighted: Items for the highlighted content region.
+ * - page.help: Dynamic help text, mostly for admin pages.
+ * - page.content: The main content of the current page.
+ * - page.sidebar_first: Items for the first sidebar.
+ * - page.sidebar_second: Items for the second sidebar.
+ * - page.footer: Items for the footer region.
+ *
+ * @see template_preprocess_page()
+ * @see html.html.twig
+ */
+#}
+
+<div id="page" class="page-wrapper">
+  
+  {% include '@normandie/layout/header.html.twig' %}
+
+  {# Main Home Hero Section (D7 structure) #}
+  {% include '@normandie/sections/main-home.html.twig' %}
+
+  <!-- Main Content Area -->
+  <div id="main" class="main-container">
+    {% include '@normandie/sections/bottom-home.html.twig' %}
+  </div>
+
+  {# Modal d'information page d'accueil #}
+  {% include '@normandie/sections/modal-home.html.twig' %}
+
+  {% include '@normandie/layout/footer.html.twig' %}
+</div>

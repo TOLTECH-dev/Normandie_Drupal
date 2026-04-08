@@ -1,0 +1,7 @@
+chiffrescles:
+  version: 1.0
+  js:
+    js/chiffrescles.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

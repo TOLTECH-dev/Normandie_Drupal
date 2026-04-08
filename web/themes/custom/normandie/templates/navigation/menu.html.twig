@@ -1,0 +1,188 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu - Using D7 structure with separated submenus.
+ *
+ * D7 STRUCTURE:
+ * ├─ Main menu items (no nested children in HTML)
+ * └─ Subnavigation region (displays children of active menu item)
+ *
+ * D10 ADAPTATION:
+ * This template handles different menus differently:
+ * - main-menu: Render ONLY first level items (children go to subnavigation)
+ * - secondary-menu: Render children of active menu item
+ * - social: Render as-is (no hierarchy)
+ * - Others: Default nested structure
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the UL element.
+ * - items: List of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu item title.
+ *   - url: The menu item URL.
+ *   - in_active_trail: Boolean indicating if item is in active trail.
+ */
+#}
+
+{%- set attributes = attributes.addClass('menu', 'nav') -%}
+
+{%- if items -%}
+  {# Social menu - use D7 class "socials" for styling #}
+  {%- if menu_name == 'social' -%}
+    <ul{{ attributes.addClass('socials') }}>
+      {%- for item in items -%}
+        <li{{ item.attributes }}>
+          {%- if item.url -%}
+            {%- set social_class = '' -%}
+            {%- if 'facebook' in item.title|lower -%}
+              {%- set social_class = 'facebook' -%}
+            {%- elseif 'twitter' in item.title|lower -%}
+              {%- set social_class = 'twitter' -%}
+            {%- elseif 'linkedin' in item.title|lower -%}
+              {%- set social_class = 'linkedin' -%}
+            {%- endif -%}
+            {{ link(item.title, item.url, { class: [social_class] }) }}
+          {%- else -%}
+            {{ item.title }}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+  {# Header top menu (logos) - use D7 structure #}
+  {%- elseif menu_name == 'header-top' -%}
+    <ul{{ attributes }}>
+      {%- for item in items -%}
+        <li{{ item.attributes.addClass('link') }}>
+          {%- if item.url -%}
+            {{ link(item.title, item.url) }}
+          {%- else -%}
+            {{ item.title }}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+  {# Main menu - D7 STRUCTURE: ONLY first-level items (no nested <ul>) #}
+  {%- elseif menu_name == 'main' or menu_name == 'main-menu' -%}
+    <ul{{ attributes.addClass('region-menu-main') }}>
+      {%- for item in items -%}
+        {# Special handling for "Connexion" menu item #}
+        {%- if item.is_connect -%}
+          <li class="connect{{ item.in_active_trail ? ' active-trail active' : '' }}">
+            <a href="">Connexion</a>
+            <div class="connect-box">
+              <div class="wrap-connect-box">
+                <div class="colonne-connect">
+                  <p class="top-connect">Je suis un particulier, je veux suivre ma demande d'aide</p>
+                  <div class="bottom-connect">
+                    {%- if item.particulier_url is not null -%}
+                      <a href="{{ item.particulier_url }}">Connexion particulier</a>
+                    {%- endif -%}
+                  </div>
+                </div>
+                <div class="colonne-connect">
+                  <p class="top-connect">Je suis un partenaire du dispositif, je souhaite suivre mes dossiers</p>
+                  <div class="bottom-connect">
+                    {%- if item.partenaire_url is not null -%}
+                      <a href="{{ item.partenaire_url }}">Connexion partenaire</a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        {%- else -%}
+          <li{{ item.attributes
+            .addClass(loop.first ? 'first' : '')
+            .addClass(loop.last ? 'last' : '')
+            .addClass(item.below ? 'has-children' : 'leaf')
+            .addClass(item.in_active_trail ? 'active-trail active' : '')
+          }}>
+            {%- if item.url -%}
+              {{ link(item.title, item.url, {
+                'class': item.in_active_trail ? ['active-trail', 'active'] : []
+              }) }}
+            {%- else -%}
+              <span class="{{ item.in_active_trail ? 'active-trail active' : '' }}">{{ item.title }}</span>
+            {%- endif -%}
+            {# D7 DIFFERENCE: Do NOT render item.below here! 
+               Submenus are rendered separately in region-subnavigation #}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+  {# Secondary menu - D7 STRUCTURE: Render children of active main menu item #}
+  {%- elseif menu_name == 'secondary-menu' -%}
+    <ul{{ attributes.addClass('region-menu-secondary') }}>
+      {%- for item in items -%}
+        <li{{ item.attributes
+          .addClass(loop.first ? 'first' : '')
+          .addClass(loop.last ? 'last' : '')
+          .addClass('leaf')
+          .addClass(item.in_active_trail ? 'active-trail active' : '')
+        }}>
+          {%- if item.url -%}
+            {{ link(item.title, item.url, {
+              'class': item.in_active_trail ? ['active-trail', 'active'] : []
+            }) }}
+          {%- else -%}
+            <span class="{{ item.in_active_trail ? 'active-trail active' : '' }}">{{ item.title }}</span>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+  {%- elseif menu_name == 'menu-menu-footer' -%}
+    <div class="region region-footer">
+      <div class="block block-menu-block clearfix">
+        <ul{{ attributes.addClass('region-menu-secondary') }}>
+          {%- for item in items -%}
+            <li{{ item.attributes
+              .addClass(loop.first ? 'first' : '')
+              .addClass(loop.last ? 'last' : '')
+              .addClass('leaf')
+              .addClass(item.in_active_trail ? 'active-trail active' : '')
+            }}>
+              {%- if item.url -%}
+                {{ link(item.title, item.url, {
+                  'class': item.in_active_trail ? ['active-trail', 'active'] : []
+                }) }}
+              {%- else -%}
+                <span class="{{ item.in_active_trail ? 'active-trail active' : '' }}">{{ item.title }}</span>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {# Default menu structure (nested) #}
+  {%- else -%}
+    <ul{{ attributes }}>
+      {%- for item in items -%}
+        <li{{ item.attributes }}>
+          {%- if item.url -%}
+            {{ link(item.title, item.url) }}
+          {%- else -%}
+            {{ item.title }}
+          {%- endif -%}
+          {%- if item.below -%}
+            <ul>
+              {%- for subitem in item.below -%}
+                <li{{ subitem.attributes }}>
+                  {%- if subitem.url -%}
+                    {{ link(subitem.title, subitem.url) }}
+                  {%- else -%}
+                    {{ subitem.title }}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+{%- endif -%}

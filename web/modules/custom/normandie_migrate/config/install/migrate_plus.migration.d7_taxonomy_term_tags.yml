@@ -1,0 +1,51 @@
+id: d7_taxonomy_term_tags
+label: 'Taxonomy terms (tags)'
+migration_group: normandie_migrate
+migration_tags:
+  - 'Drupal 7'
+  - Content
+
+source:
+  plugin: d7_taxonomy_term
+  bundle: tags
+  key: migrate
+
+process:
+  tid: tid
+  revision_id: tid
+  vid:
+    plugin: migration_lookup
+    migration: d7_taxonomy_vocabulary
+    source: vid
+  
+  langcode:
+    plugin: default_value
+    source: language
+    default_value: und
+  
+  name: name
+  description/value: description
+  description/format:
+    plugin: default_value
+    default_value: basic_html
+  
+  weight: weight
+  
+  parent_id:
+    plugin: skip_on_empty
+    method: process
+    source: parent
+  parent:
+    plugin: migration_lookup
+    migration: d7_taxonomy_term_tags
+    source: '@parent_id'
+  
+  changed: timestamp
+
+destination:
+  plugin: 'entity:taxonomy_term'
+
+migration_dependencies:
+  required:
+    - d7_taxonomy_vocabulary
+  optional: []

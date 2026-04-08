@@ -1,0 +1,589 @@
+<?php
+
+/**
+ * @file
+ * Normandie theme functions and preprocess hooks.
+ */
+
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\views\Views;
+
+/**
+ *
+ */
+function normandie_preprocess_html(&$variables) {
+  // Attach Bootstrap 5 CSS directly (workaround for library parsing issues)
+  $variables['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#attributes' => [
+        'rel' => 'stylesheet',
+        'href' => base_path() . 'themes/custom/normandie/bootstrap/css/bootstrap.min.css',
+      ],
+    ],
+    'bootstrap5-css',
+  ];
+
+  // Attach Bootstrap 5 JS directly.
+  $variables['#attached']['html_head'][] = [
+    [
+      '#tag' => 'script',
+      '#attributes' => [
+        'src' => base_path() . 'themes/custom/normandie/bootstrap/js/bootstrap.bundle.min.js',
+      ],
+    ],
+    'bootstrap5-js',
+  ];
+
+  // Attach theme CSS via library system.
+  $variables['#attached']['library'][] = 'normandie/global-styling';
+
+  // Attach theme JS via library system.
+  $variables['#attached']['library'][] = 'normandie/theme-scripts';
+
+  // Add Bootstrap 5 body classes for development.
+  $variables['attributes']['class'][] = 'bootstrap5-enabled';
+
+  // Add specific classes for homepage.
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $variables['attributes']['class'][] = 'page-front';
+    $variables['attributes']['class'][] = 'page-home';
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Extract active menu children for D7-compatible structure.
+ *
+ * D7 Structure:
+ * - Main menu shows first-level items
+ * - Secondary menu (subnavigation region) shows children of active menu item.
+ *
+ * D10 Adaptation:
+ * - Use menu plugin preprocessing to get rendered menu tree
+ * - Extract active menu item and get its children
+ * - Pass to page variables for secondary menu rendering
+ */
+function normandie_preprocess_page(&$variables) {
+  // Pass theme path to templates (for images and assets)
+  $theme_handler = \Drupal::service('theme_handler');
+  $theme = $theme_handler->getTheme('normandie');
+  $variables['theme_path'] = $theme->getPath();
+
+  // Pass current path for page-specific styling.
+  $current_path = \Drupal::service('path.current')->getPath();
+  $alias_manager = \Drupal::service('path_alias.manager');
+  $alias = $alias_manager->getAliasByPath($current_path);
+  // Use alias if available, otherwise use current path.
+  $variables['current_path'] = !empty($alias) && $alias !== $current_path ? $alias : $current_path;
+
+  // Check if this is the front page (homepage)
+  $variables['is_front_page'] = \Drupal::service('path.matcher')->isFrontPage();
+
+  // ============ D7 MIGRATION: showTitle Logic ============
+  // Check for field_tags with tid=2 to conditionally show title
+  $variables['showTitle'] = FALSE;
+  if (!empty($variables['node'])) {
+    $node = $variables['node'];
+    $nid = $node->id();
+
+    // Query the database directly to check for tags.
+    $database = \Drupal::database();
+    $query = $database->select('node__field_tags', 'nft')
+      ->fields('nft', ['field_tags_target_id'])
+      ->condition('nft.entity_id', $nid)
+      ->condition('nft.deleted', 0)
+      ->execute();
+
+    $results = $query->fetchAll();
+
+    if (!empty($results)) {
+      foreach ($results as $row) {
+        if ($row->field_tags_target_id == 2) {
+          $variables['showTitle'] = TRUE;
+          break;
+        }
+      }
+    }
+  }
+  // ============ End showTitle Logic ============
+  // Load the liste_actus view block for bottom-home section.
+  if ($variables['is_front_page']) {
+    $view = Views::getView('liste_actus');
+    if ($view) {
+      $view->setDisplay('block');
+      $view->execute();
+      $variables['liste_actus_output'] = $view->buildRenderable();
+    }
+
+    // Load the front page node if not already available
+    // This ensures the body field is accessible in bottom-home.html.twig.
+    if (empty($variables['node'])) {
+      // Get the front page path from config.
+      $site_config = \Drupal::config('system.site');
+      $front_page = $site_config->get('page.front');
+
+      // Extract node ID from path (e.g., "/node/1" -> "1")
+      if (preg_match('/\/node\/(\d+)/', $front_page, $matches)) {
+        $nid = $matches[1];
+        $node = Node::load($nid);
+        if ($node) {
+          $variables['node'] = $node;
+        }
+      }
+    }
+  }
+
+  // Special handling for "Trouver un conseiller" page.
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() === 'entity.node.canonical') {
+    $node = $route_match->getParameter('node');
+
+    // Get configured node ID from module settings.
+    $config = \Drupal::config('trouver_conseiller.settings');
+    $trouver_conseiller_nid = $config->get('page_node_id');
+
+    if ($node && $node->id() == $trouver_conseiller_nid) {
+      // Load and render the trouver_conseiller block.
+      $block_manager = \Drupal::service('plugin.manager.block');
+      $block_config = [];
+      $plugin_block = $block_manager->createInstance('trouver_conseiller_block', $block_config);
+
+      if ($plugin_block) {
+        $render = $plugin_block->build();
+        $variables['trouver_conseiller_block'] = $render;
+      }
+    }
+
+    // Special handling for "Cartostructure" page.
+    $cartostructure_config = \Drupal::config('cartostructure.settings');
+    $cartostructure_nid = $cartostructure_config->get('page_node_id');
+
+    if ($node && $node->id() == $cartostructure_nid) {
+      // Load and render the cartostructure block.
+      $block_manager = \Drupal::service('plugin.manager.block');
+      $block_config = [];
+      $plugin_block = $block_manager->createInstance('cartostructure_block', $block_config);
+
+      if ($plugin_block) {
+        $render = $plugin_block->build();
+        $variables['cartostructure_block'] = $render;
+      }
+    }
+
+    // Special handling for "Chiffrescles" page.
+    $chiffrescles_config = \Drupal::config('chiffrescles.settings');
+    $chiffrescles_nid = $chiffrescles_config->get('page_node_id');
+
+    if ($node && $node->id() == $chiffrescles_nid) {
+      // Load and render the chiffrescles block.
+      $block_manager = \Drupal::service('plugin.manager.block');
+      $block_config = [];
+      $plugin_block = $block_manager->createInstance('chiffrescles_block', $block_config);
+
+      if ($plugin_block) {
+        $render = $plugin_block->build();
+        $variables['chiffrescles_block'] = $render;
+      }
+    }
+
+    // Special handling for "Cartochantier" page.
+    $cartochantier_config = \Drupal::config('cartochantier.settings');
+    $cartochantier_nid = $cartochantier_config->get('page_node_id');
+
+    if ($node && $node->id() == $cartochantier_nid) {
+      // Load and render the cartochantier block.
+      $block_manager = \Drupal::service('plugin.manager.block');
+      $block_config = [];
+      $plugin_block = $block_manager->createInstance('cartochantier_block', $block_config);
+
+      if ($plugin_block) {
+        $variables['cartochantier_block'] = $plugin_block->build();
+      }
+    }
+
+    // Special handling for "Carto" pages.
+    // Respects D7 integration where carto block detects context based on node.
+    $carto_config = \Drupal::config('carto.settings');
+    $carto_nodes = $carto_config->get('nodes');
+
+    // Check if current node is a carto page (auditeur or renovateur).
+    if ($node && is_array($carto_nodes)) {
+      $current_nid = $node->id();
+      $is_carto_page = in_array($current_nid, $carto_nodes);
+
+      if ($is_carto_page) {
+        // Load and render the carto block.
+        $block_manager = \Drupal::service('plugin.manager.block');
+        $block_config = [];
+        $plugin_block = $block_manager->createInstance('carto_block', $block_config);
+
+        if ($plugin_block) {
+          $render = $plugin_block->build();
+          $variables['carto_block'] = $render;
+        }
+      }
+    }
+  }
+
+  // Use Drupal's menu system to load and process the main menu.
+  $menu_tree = \Drupal::menuTree();
+  $menu_name = 'main';
+
+  // Get the menu tree parameters for the current route.
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
+
+  // Load the menu tree.
+  $tree = $menu_tree->load($menu_name, $parameters);
+
+  // Transform the tree (this applies menu link plugins)
+  $manipulators = [
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ];
+  $tree = $menu_tree->transform($tree, $manipulators);
+
+  // Find active menu item and extract its children.
+  $secondary_items = [];
+  _normandie_extract_active_children($tree, $secondary_items);
+
+  // Pass to page variables for secondary menu rendering.
+  $variables['secondary_menu_items'] = $secondary_items;
+}
+
+/**
+ * Helper function to recursively find active menu item.
+ *
+ * @param array $tree
+ *   Menu tree array containing MenuLinkTreeElement objects.
+ * @param array &$children
+ *   Reference to array where children will be stored.
+ */
+function _normandie_extract_active_children(&$tree, &$children) {
+  // Get current route and parameters for comparison.
+  $route_match = \Drupal::routeMatch();
+  $current_route = $route_match->getRouteName();
+  $current_route_params = $route_match->getRawParameters()->all();
+
+  foreach ($tree as $element) {
+    // $element is a MenuLinkTreeElement object
+    $link = $element->link;
+
+    // If active, or if children might be active, check the items.
+    if (!empty($element->subtree)) {
+      // Check if current page matches this parent link.
+      $link_url = $link->getUrlObject();
+      $parent_is_active = FALSE;
+
+      try {
+        if ($link_url->isRouted() && $link_url->getRouteName() === $current_route) {
+          // Parent link matches current route.
+          $parent_is_active = TRUE;
+        }
+      }
+      catch (\Exception $e) {
+        // URL might not be routed, continue.
+      }
+
+      // Check if any child is active (current page)
+      $has_active_child = FALSE;
+      foreach ($element->subtree as $child_element) {
+        if (isset($child_element->link)) {
+          $child_link = $child_element->link;
+          $child_url = $child_link->getUrlObject();
+
+          try {
+            // Check if child URL matches current route.
+            if ($child_url->isRouted() && $child_url->getRouteName() === $current_route) {
+              // Further check route parameters (e.g., node ID)
+              $child_route_params = $child_url->getRouteParameters();
+              $params_match = TRUE;
+
+              foreach ($child_route_params as $param_key => $param_value) {
+                if (isset($current_route_params[$param_key]) && $current_route_params[$param_key] != $param_value) {
+                  $params_match = FALSE;
+                  break;
+                }
+              }
+
+              if ($params_match) {
+                $has_active_child = TRUE;
+                break;
+              }
+            }
+          }
+          catch (\Exception $e) {
+            // Continue checking other children.
+          }
+        }
+      }
+
+      // If parent is active OR has an active child, extract its children.
+      if ($parent_is_active || $has_active_child) {
+        foreach ($element->subtree as $child_element) {
+          if (isset($child_element->link)) {
+            $child_link = $child_element->link;
+
+            // Skip disabled menu items.
+            if (!$child_link->isEnabled()) {
+              continue;
+            }
+
+            $child_url = $child_link->getUrlObject();
+            $child_title = $child_link->getTitle();
+
+            // Determine if this specific child is the active one.
+            $child_in_active_trail = FALSE;
+
+            try {
+              if ($child_url->isRouted() && $child_url->getRouteName() === $current_route) {
+                // Check route parameters match.
+                $child_route_params = $child_url->getRouteParameters();
+                $params_match = TRUE;
+
+                foreach ($child_route_params as $param_key => $param_value) {
+                  if (isset($current_route_params[$param_key]) && $current_route_params[$param_key] != $param_value) {
+                    $params_match = FALSE;
+                    break;
+                  }
+                }
+
+                $child_in_active_trail = $params_match;
+              }
+            }
+            catch (\Exception $e) {
+              // Child URL not routed.
+            }
+
+            $children[] = [
+              'url' => $child_url,
+              'title' => $child_title,
+              'in_active_trail' => $child_in_active_trail,
+            ];
+          }
+        }
+        // Found and processed.
+        return;
+      }
+
+      // Not this item, but might have active children deeper - recurse.
+      _normandie_extract_active_children($element->subtree, $children);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ *
+ * Special handling for the "Connexion" menu item.
+ */
+function normandie_preprocess_menu(&$variables) {
+  // Only apply to main menu.
+  if ($variables['menu_name'] !== 'main') {
+    return;
+  }
+
+  // Load the full menu tree to get all children.
+  $menu_tree = \Drupal::menuTree();
+  $parameters = new MenuTreeParameters();
+  // Load 2 levels.
+  $parameters->setMaxDepth(2);
+  $tree = $menu_tree->load('main', $parameters);
+
+  // Transform the tree.
+  $manipulators = [
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ];
+  $tree = $menu_tree->transform($tree, $manipulators);
+
+  // Find the "Connexion" menu item and customize it.
+  foreach ($variables['items'] as &$item) {
+    if ($item['title'] == 'Connexion') {
+      // Extract child menu items from the full tree.
+      $particulier_url = NULL;
+      $partenaire_url = NULL;
+
+      // Search in the full tree for Connexion and its children.
+      foreach ($tree as $tree_item) {
+        if ($tree_item->link->getTitle() == 'Connexion') {
+          if (!empty($tree_item->subtree)) {
+            foreach ($tree_item->subtree as $child) {
+              $child_title = $child->link->getTitle();
+              if ($child_title == 'Espace particulier') {
+                $particulier_url = $child->link->getUrlObject()->toString();
+              }
+              elseif ($child_title == 'Espace partenaire') {
+                $partenaire_url = $child->link->getUrlObject()->toString();
+              }
+            }
+          }
+          break;
+        }
+      }
+
+      // Override URLs from environment settings if configured.
+      $env_beneficiaire = \Drupal\Core\Site\Settings::get('url_beneficiaire');
+      $env_partenaire = \Drupal\Core\Site\Settings::get('url_partenaire');
+      if (!empty($env_beneficiaire)) {
+        $particulier_url = $env_beneficiaire;
+      }
+      if (!empty($env_partenaire)) {
+        $partenaire_url = $env_partenaire;
+      }
+
+      // Mark this item as the special "connect" item.
+      $item['is_connect'] = TRUE;
+      $item['particulier_url'] = $particulier_url;
+      $item['partenaire_url'] = $partenaire_url;
+
+      // Remove 'below' to prevent default submenu rendering.
+      unset($item['below']);
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Modify user login and password reset forms for D7 compatibility.
+ */
+function normandie_form_alter(&$form, &$form_state, $form_id) {
+  // Modify user login form.
+  if ($form_id === 'user_login_form') {
+    // Customize login form error messages.
+    if (!empty($form['name'])) {
+      $form['name']['#title'] = t("Nom d'utilisateur. *");
+    }
+    if (!empty($form['pass'])) {
+      $form['pass']['#title'] = t("Mot de passe. *");
+    }
+
+    // Add custom validation to prefix error message.
+    $form['#validate'][] = 'normandie_user_login_validate';
+  }
+
+  // Modify user password reset form (user_pass)
+  if ($form_id === 'user_pass') {
+    // Change the field label for name field.
+    if (!empty($form['name'])) {
+      $form['name']['#title'] = t("Nom d'utilisateur ou adresse électronique. *");
+      $form['name']['#required'] = TRUE;
+      // Remove the help text.
+      unset($form['name']['#description']);
+    }
+
+    // Change the submit button text.
+    if (!empty($form['actions']['submit'])) {
+      $form['actions']['submit']['#value'] = t('Envoyer nouveau mot de passe par courriel');
+    }
+
+    // Add custom submit handler to catch email errors.
+    $form['#submit'][] = 'normandie_user_pass_submit';
+  }
+}
+
+/**
+ * Custom validation for login form error message.
+ *
+ * Prepends "Désolé, " to the login error message for D7 compatibility.
+ */
+function normandie_user_login_validate(&$form, &$form_state) {
+  $errors = $form_state->getErrors();
+
+  foreach ($errors as $message) {
+    // Check if this is the invalid credentials error.
+    if (strpos($message, "Nom d'utilisateur ou mot de passe non reconnu") !== FALSE) {
+      // Clear the error and add the new one with "Désolé, " prefix.
+      $form_state->clearErrors();
+      $form_state->setErrorByName('name', t("Désolé, nom d'utilisateur ou mot de passe non reconnu."));
+      break;
+    }
+  }
+}
+
+/**
+ * Custom submit handler for password reset form.
+ *
+ * Redirects to /user after success with D7 success message styling.
+ */
+function normandie_user_pass_submit(&$form, &$form_state) {
+  // Get the username from the form.
+  $name = $form_state->getValue('name');
+
+  // Clear default Drupal messages.
+  \Drupal::messenger()->deleteAll();
+
+  // Add D7-style success message with proper HTML structure and classes.
+  $message = new FormattableMarkup(
+    '<div class="alert alert-block alert-dismissible alert-success ' .
+    'messages status mt-4">' .
+    '<h4 class="element-invisible">Message d\'état</h4>' .
+    'If <em>@name</em> is a valid account, an email will be sent with ' .
+    'instructions to reset your password.</div>',
+    ['@name' => $name]
+  );
+  \Drupal::messenger()->addStatus($message);
+
+  // Redirect to /user instead of home page.
+  $form_state->setRedirect('user.page');
+}
+
+/**
+ * Implements hook_preprocess_menu_local_tasks().
+ *
+ * D7 Migration: Remove "Create Account" tab and rename Password Reset.
+ */
+function normandie_preprocess_menu_local_tasks(&$variables) {
+  // Process primary tabs.
+  if (!empty($variables['primary'])) {
+    $new_primary = [];
+
+    foreach ($variables['primary'] as $key => $task) {
+      // Hide "Créer un nouveau compte" (Create Account) tab.
+      if (strpos($task['#link']['title'], 'Créer') !== FALSE ||
+          strpos($task['#link']['title'], 'nouveau compte') !== FALSE) {
+        continue;
+      }
+
+      // Rename "Réinitialiser votre mot de passe" to
+      // "Demander un nouveau mot de passe".
+      if (strpos($task['#link']['title'], 'Réinitialiser') !== FALSE ||
+          strpos($task['#link']['title'], 'mot de passe') !== FALSE) {
+        $task['#link']['title'] = 'Demander un nouveau mot de passe';
+      }
+
+      $new_primary[$key] = $task;
+    }
+
+    $variables['primary'] = $new_primary;
+  }
+
+  // Process secondary tabs if needed.
+  if (!empty($variables['secondary'])) {
+    $new_secondary = [];
+
+    foreach ($variables['secondary'] as $key => $task) {
+      // Hide "Créer un nouveau compte" (Create Account) tab.
+      if (strpos($task['#link']['title'], 'Créer') !== FALSE ||
+          strpos($task['#link']['title'], 'nouveau compte') !== FALSE) {
+        continue;
+      }
+
+      // Rename "Réinitialiser votre mot de passe" to
+      // "Demander un nouveau mot de passe".
+      if (strpos($task['#link']['title'], 'Réinitialiser') !== FALSE ||
+          strpos($task['#link']['title'], 'mot de passe') !== FALSE) {
+        $task['#link']['title'] = 'Demander un nouveau mot de passe';
+      }
+
+      $new_secondary[$key] = $task;
+    }
+
+    $variables['secondary'] = $new_secondary;
+  }
+}

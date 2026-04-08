@@ -1,0 +1,17 @@
+carto.settings:
+  type: config_object
+  label: 'Carto settings'
+  mapping:
+    nodes:
+      type: mapping
+      label: 'Node IDs for carto pages'
+      description: 'Nodes where carto blocks are placed for different partner types'
+      mapping:
+        auditeur:
+          type: integer
+          label: 'Auditor page node ID'
+          description: 'Node where auditor partners map is displayed (type=0)'
+        renovateur:
+          type: integer
+          label: 'Renovation professional page node ID'
+          description: 'Node where renovation professional partners map is displayed (type=1)'

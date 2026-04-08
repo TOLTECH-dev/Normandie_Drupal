@@ -1,0 +1,7 @@
+langcode: fr
+status: true
+dependencies: {  }
+name: Actus
+vid: actus
+description: 'Vocabulaire pour les actualités'
+weight: 0

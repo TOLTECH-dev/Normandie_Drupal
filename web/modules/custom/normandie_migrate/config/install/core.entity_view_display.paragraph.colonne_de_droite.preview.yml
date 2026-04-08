@@ -1,0 +1,31 @@
+uuid: 12345678-1234-1234-1234-123456789012
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.colonne_de_droite.field_contenu
+    - field.field.paragraph.colonne_de_droite.field_titre
+    - paragraphs.paragraphs_type.colonne_de_droite
+  module:
+    - field
+id: paragraph.colonne_de_droite.preview
+targetEntityType: paragraph
+bundle: colonne_de_droite
+mode: preview
+content:
+  field_titre:
+    type: string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_contenu:
+    type: basic_string
+    label: hidden
+    settings:
+      trim_length: 150
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden: {  }

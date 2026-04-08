@@ -1,0 +1,21 @@
+langcode: und
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_contenu
+    - paragraphs.paragraphs_type.colonne_de_droite
+  module:
+    - text
+id: paragraph.colonne_de_droite.field_contenu
+field_name: field_contenu
+entity_type: paragraph
+bundle: colonne_de_droite
+label: Contenu
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

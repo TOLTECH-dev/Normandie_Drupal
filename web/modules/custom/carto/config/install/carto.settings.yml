@@ -1,0 +1,5 @@
+# Carto module configuration
+# Node IDs where carto blocks are placed for different user types
+nodes:
+  auditeur: 68      # Auditors/Energy audits
+  renovateur: 69    # Renovation professionals

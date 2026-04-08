@@ -1,0 +1,238 @@
+/**
+ * Views Slideshow Cycle Styles
+ * D7 to D10 migration - maintains visual compatibility
+ * 
+ * This CSS replicates the EXACT D7 styles.css rules for the slideshow block
+ */
+
+/* ============================================================================
+   MAIN SLIDESHOW CONTAINER
+   ============================================================================ */
+
+/* Main slideshow wrapper - D7 layout */
+#views_slideshow_cycle_main_liste_actus-block_1 {
+  background: #f2f2f2;
+  padding: 18px;
+  overflow: hidden;
+}
+
+/* Slides container */
+#views_slideshow_cycle_teaser_section_liste_actus-block_1 {
+  position: relative;
+  width: 404px;
+  min-height: 400px;
+  background: #f2f2f2;
+  overflow: visible;
+}
+
+.views_slideshow_cycle_slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 404px;
+  box-sizing: border-box;
+  background: #f2f2f2;
+  opacity: 0 !important;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 3;
+  visibility: hidden;
+}
+
+.views_slideshow_cycle_slide:first-of-type {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 4 !important;
+  position: relative;
+}
+
+.views_slideshow_cycle_slide.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 4 !important;
+  position: absolute;
+}
+
+/* ============================================================================
+   BLOCK TITLE - D7 styles.css
+   ============================================================================ */
+
+#block-views-liste-actus-block {
+  background: transparent;
+  margin: 0px 0px 30px 0px;
+  padding: 0px;
+}
+
+#block-views-liste-actus-block.block {
+  border: 0;
+  padding: 0;
+}
+
+#block-views-liste-actus-block.block-views {
+  background: transparent;
+}
+
+#block-views-liste-actus-block h2 {
+  height: 66px;
+  background: #EC6607;
+  color: white;
+  font-family: 'avenir-medium';
+  font-size: 2rem;
+  line-height: 27px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  text-transform: uppercase;
+  padding-left: 30px;
+  padding-right: 30px;
+  position: relative;
+  margin-bottom: 15px;
+  justify-content: center;
+  text-align: center;
+  border: none;
+}
+
+/* ============================================================================
+   SLIDE CONTENT FIELDS - D7 styles.css
+   ============================================================================ */
+
+/* Title link - EXACT D7 selector and styles */
+#block-views-liste-actus-block .views-field-title a {
+  color: black;
+  font-family: 'avenir-medium';
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 2.5rem;
+}
+
+#block-views-liste-actus-block .views-field-title a:hover {
+  text-decoration: underline;
+}
+
+/* Body field - use same defaults as D7 */
+#block-views-liste-actus-block .views-field-body-1 {
+  color: #333;
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+
+#block-views-liste-actus-block .views-field-body-1 p {
+  margin: 0 0 10px 0;
+}
+
+/* Lien savoir plus - EXACT D7 selector and styles */
+#block-views-liste-actus-block .lien-savoir-plus a {
+  color: #EC6607;
+  font-family: 'avenir-medium';
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 2.5rem;
+  position: relative;
+  top: -10px;
+  text-decoration: none;
+}
+
+#block-views-liste-actus-block .lien-savoir-plus a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================================
+   PAGER CONTROLS - D7 styles.css
+   ============================================================================ */
+
+#widget_pager_bottom_liste_actus-block_1,
+.views-slideshow-pager-fields {
+  display: flex;
+  padding-top: 17px;
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: transparent;
+  min-height: 25px;
+}
+
+.views-slideshow-pager-field-item {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+  font-size: 0;
+}
+
+.views-field-counter {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  font-size: 0;
+}
+
+.views-content-counter {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  font-size: 0;
+}
+
+/* Pager button - EXACT D7 styling */
+.views-slideshow-pager-field-item a,
+.views-content-counter a {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  background: #f2f2f2;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0;
+  line-height: 13px;
+  text-indent: -9999px;
+  overflow: hidden;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.views-slideshow-pager-field-item a:hover,
+.views-content-counter a:hover {
+  background-color: #949292;
+}
+
+.views-slideshow-pager-field-item.active a,
+.views-slideshow-pager-field-item.active .views-content-counter a {
+  background: #949292;
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  #views_slideshow_cycle_main_liste_actus-block_1,
+  #views_slideshow_cycle_teaser_section_liste_actus-block_1,
+  .views_slideshow_cycle_slide {
+    width: 100%;
+    max-width: 404px;
+  }
+
+  .views_slideshow_cycle_slide {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  #views_slideshow_cycle_main_liste_actus-block_1,
+  #views_slideshow_cycle_teaser_section_liste_actus-block_1,
+  .views_slideshow_cycle_slide {
+    width: 100%;
+    max-width: 404px;
+  }
+
+  .views_slideshow_cycle_slide {
+    padding: 10px;
+  }
+}

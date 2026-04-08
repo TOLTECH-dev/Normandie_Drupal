@@ -1,0 +1,15 @@
+services:
+  chiffrescles.chiffrescles_service:
+    class: Drupal\chiffrescles\Service\ChiffresclesService
+    arguments:
+      - '@logger.channel.chiffrescles'
+      - '@database.symfony'
+
+  logger.channel.chiffrescles:
+    parent: logger.channel_base
+    arguments: ['chiffrescles']
+
+  database.symfony:
+    class: Drupal\Core\Database\Connection
+    factory: ['Drupal\Core\Database\Database', 'getConnection']
+    arguments: ['default', 'symfony']

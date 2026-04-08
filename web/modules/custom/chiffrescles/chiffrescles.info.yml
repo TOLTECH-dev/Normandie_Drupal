@@ -1,0 +1,8 @@
+name: 'Chiffres Clés'
+type: module
+description: 'Module des chiffres clés'
+core_version_requirement: ^10
+package: 'Normandie'
+dependencies:
+  - drupal:block
+  - normandie_core:normandie_core

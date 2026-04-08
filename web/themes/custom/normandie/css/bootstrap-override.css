@@ -1,0 +1,50 @@
+/**
+ * Bootstrap 5 Table Override
+ * 
+ * ISSUE: WYSIWYG tables have inline styles on <table> element
+ * Example: <table style="background-color:hsl(30,75%,60%);border-width:5px;border-color:hsl(0,75%,60%)">
+ * 
+ * Bootstrap's .table td, .table th resets:
+ * - border-width: 0
+ * - background-color: transparent
+ * - Applies different backgrounds to odd/even rows (striped)
+ * 
+ * SOLUTION: Make ALL td/th inherit the table's styles uniformly
+ */
+
+/* ============================================================
+   Tables with inline styles from WYSIWYG
+   ============================================================ */
+
+/* When table has inline styles, apply them to ALL td and th */
+table[style] td,
+table[style] th {
+  /* Inherit table's border properties */
+  border-width: inherit !important;
+  border-style: inherit !important;
+  /* Inherit table's background - FORCE for all rows */
+  background-color: inherit !important;
+}
+
+/* OVERRIDE Bootstrap striped rows - force same background for all */
+table[style] tbody tr:nth-child(odd) td,
+table[style] tbody tr:nth-child(odd) th,
+table[style] tbody tr:nth-child(even) td,
+table[style] tbody tr:nth-child(even) th {
+  background-color: inherit !important;
+}
+
+/* Show borders for tables with border styling (border-width OR border-color) */
+table[style*="border-width"] td,
+table[style*="border-width"] th,
+table[style*="border-color"] td,
+table[style*="border-color"] th {
+  border-style: solid !important;
+  border-width: 1px !important;
+}
+
+/* Ensure border-collapse works */
+table[style] {
+  border-collapse: collapse;
+  border-style: solid;
+}

@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Template for liste_actus view fields
+ * Matches Drupal 7 structure with proper div wrappers and field classes
+ *
+ * Available variables:
+ * - fields: Array of field objects with content and label
+ * - row: The current row being rendered
+ */
+#}
+
+{% for field_name, field in fields %}
+  {# Title field with span wrapper for inline content #}
+  {% if field_name == 'title' %}
+    <div class="views-field views-field-{{ field_name }}">
+      <span class="field-content">
+        {{- field.content -}}
+      </span>
+    </div>
+  
+  {# Body field with div wrapper for block content - using body-1 class for D7 compatibility #}
+  {% elseif field_name == 'body' %}
+    <div class="views-field views-field-body-1">
+      <div class="field-content">
+        {{- field.content -}}
+      </div>
+    </div>
+  
+  {# Read more link with lien-savoir-plus class #}
+  {% elseif field_name == 'view_node' %}
+    <div class="views-field views-field-{{ field_name }}">
+      <span class="field-content lien-savoir-plus">
+        {% if row._entity %}
+          <a href="{{ path('entity.node.canonical', {'node': row._entity.id()}) }}">Lire la suite</a>
+        {% else %}
+          {{- field.content -}}
+        {% endif %}
+      </span>
+    </div>
+  
+  {# Default field wrapper #}
+  {% else %}
+    <div class="views-field views-field-{{ field_name }}">
+      {% if field.label %}
+        <div class="field-label">{{ field.label }}:</div>
+      {% endif %}
+      <div class="field-content">
+        {{- field.content -}}
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}

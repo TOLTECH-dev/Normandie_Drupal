@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="trouver_conseiller">
+  <description>PHP CodeSniffer configuration for Drupal modules</description>
+
+  <!-- Files to analyze -->
+  <file>web/modules/custom</file>
+  <file>web/themes/custom/normandie</file>
+
+  <!-- Drupal standards for PHP files only -->
+  <rule ref="Drupal">
+    <exclude-pattern>*.js</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
+    <exclude-pattern>*.json</exclude-pattern>
+    <exclude-pattern>*.yml</exclude-pattern>
+    <exclude-pattern>*.yaml</exclude-pattern>
+    <exclude-pattern>*.twig</exclude-pattern>
+  </rule>
+  <rule ref="DrupalPractice">
+    <exclude-pattern>*.js</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
+    <exclude-pattern>*.json</exclude-pattern>
+    <exclude-pattern>*.yml</exclude-pattern>
+    <exclude-pattern>*.yaml</exclude-pattern>
+    <exclude-pattern>*.twig</exclude-pattern>
+  </rule>
+
+  <!-- Exclude only dependencies -->
+  <exclude-pattern>*.md</exclude-pattern>
+  <exclude-pattern>*.min.js</exclude-pattern>
+  <exclude-pattern>*.min.css</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/js/lib/*</exclude-pattern>
+  <exclude-pattern>*/libraries/*</exclude-pattern>
+  <exclude-pattern>*leaflet.js</exclude-pattern>
+
+  <!-- Ignore empty and missing docblocks -->
+  <rule ref="Drupal.Commenting.DocComment.Empty">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Drupal.Commenting.FunctionComment.Missing">
+    <severity>0</severity>
+  </rule>
+  <rule ref="Drupal.Commenting.ClassComment.Missing">
+    <severity>0</severity>
+  </rule>
+
+  <!-- Rules configuration -->
+  <arg name="colors"/>
+  <arg name="extensions" value="php,module,inc,install,test,profile,theme,js,css,yml,yaml,json,twig"/>
+  <arg value="sp"/>
+</ruleset>

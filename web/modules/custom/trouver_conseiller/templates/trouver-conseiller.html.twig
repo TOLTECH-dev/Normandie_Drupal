@@ -1,0 +1,66 @@
+{#
+/**
+ * @file
+ * Template for Trouver un Conseiller block.
+ *
+ * Available variables:
+ * - villes: Array of cities with code_insee => nom
+ */
+#}
+
+<div class="row">
+    <section class="col-lg-8 col-md-12 p-0">
+        <h1 class="page-header"><span class="custom-color-text-h1-page-header"></span></h1>
+        <div class="region region-content">
+			
+            <div id="map" class="map-responsive"><img src="/sites/default/files/contents/conseillers_he/logos_conseillers.jpg" alt=""></div>
+			
+        </div>
+    </section>
+
+    <aside class="col-lg-4 col-md-12 p-0">
+        <div class="region region-sidebar-second">
+
+            <div class="bloc-form">
+                <nav>
+                    <ul>
+                        <li><a href="" class="active">Trouver un conseiller</a></li>
+                        <li><a href="/les-conseillers">Permanences</a></li>
+                    </ul>
+                </nav>
+                <form>
+                    <div class="wrap-form">
+                        <div class="wrap-select">
+                            <input type="text" id="nb_personne" name="nb_personne" placeholder="Nombre de personnes dans le foyer" required="required" class="trouver-conseiller-form-nb-personne"/>
+                        </div>
+                        <div class="wrap-select">
+                            <select id="revenu" name="revenu" class="trouver-conseiller-form-revenu-select" required="required">
+                                <option value="" selected="selected">Revenu de référence</option>
+                                <option value="inf">Inférieur à x.</option>
+                                <option value="sup">Supérieur à x.</option>
+                            </select>
+                        </div>
+                        <div class="wrap-select">
+                            <input id="code_postal" name="code_postal" placeholder="Renseignez le code postal de l'habitation &agrave; r&eacute;nover" required="required" class="trouver-conseiller-form-code-postal"/>
+
+                        </div>
+                        <div class="wrap-select">
+                            <select id="ville" name="ville" class="trouver-conseiller-form-ville-select">
+                                <option value="" selected="selected">Ville</option>
+                                {% for code_insee, nom in villes %}
+                                    <option value="{{ code_insee }}">{{ nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input id="search" type="submit" value="Rechercher" />
+                    </div>
+                </form>
+                <div class="infos">
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+
+</div>

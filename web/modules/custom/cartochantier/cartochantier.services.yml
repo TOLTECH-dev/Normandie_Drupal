@@ -1,0 +1,10 @@
+services:
+  cartochantier.service:
+    class: Drupal\cartochantier\Service\CartochantierService
+    arguments:
+      - '@logger.channel.cartochantier'
+      - '@database.symfony'
+      - '@extension.path.resolver'
+  logger.channel.cartochantier:
+    parent: logger.channel_base
+    arguments: ['cartochantier']

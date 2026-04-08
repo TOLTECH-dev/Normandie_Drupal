@@ -1,0 +1,8 @@
+name: 'Cartochantier'
+type: module
+description: 'Work site mapping module for Normandie region'
+core_version_requirement: ^10
+package: 'Normandie'
+dependencies:
+  - drupal:block
+  - normandie_core:normandie_core

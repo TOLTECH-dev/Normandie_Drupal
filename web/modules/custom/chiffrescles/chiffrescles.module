@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains chiffrescles.module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_theme().
+ */
+function chiffrescles_theme(): array {
+  return [
+    'chiffrescles' => [
+      'template' => 'chiffrescles',
+      'variables' => [
+        'title' => NULL,
+        'theme' => NULL,
+        'theme_path' => NULL,
+      ],
+    ],
+  ];
+}

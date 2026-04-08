@@ -1,0 +1,9 @@
+langcode: und
+status: true
+dependencies: {  }
+id: colonne_de_droite
+label: 'Colonne de droite'
+icon_uuid: null
+icon_default: null
+description: 'Contenu de la colonne de droite (sidebar)'
+behavior_plugins: {  }

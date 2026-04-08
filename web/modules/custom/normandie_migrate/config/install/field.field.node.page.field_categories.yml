@@ -1,0 +1,26 @@
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_categories
+    - node.type.page
+    - taxonomy.vocabulary.categories
+id: node.page.field_categories
+field_name: field_categories
+entity_type: node
+bundle: page
+label: 'Catégorie'
+description: 'Catégorie pour classifier le contenu'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      categories: categories
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

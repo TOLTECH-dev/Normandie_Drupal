@@ -1,0 +1,8 @@
+name: 'Trouver un Conseiller'
+type: module
+description: 'Module pour trouver un conseiller en rénovation énergétique'
+core_version_requirement: ^10
+package: 'Normandie'
+dependencies:
+  - drupal:block
+  - normandie_core:normandie_core

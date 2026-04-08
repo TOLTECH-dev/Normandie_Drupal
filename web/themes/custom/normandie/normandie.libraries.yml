@@ -1,0 +1,20 @@
+global-styling:
+  css:
+    theme:
+      css/style.css: {}
+      css/styles-d7.css: {}
+      css/bootstrap-override.css: {}
+      css/custom-tables.css: {}
+      css/views-slideshow-cycle.css: {}
+
+theme-scripts:
+  js:
+    js/script.js: {}
+    js/views-slideshow-cycle.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - core/drupal.once
+
+

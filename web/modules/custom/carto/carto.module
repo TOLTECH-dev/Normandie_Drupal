@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Carto module for cartography of Normandy region partners.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function carto_help(string $route_name, RouteMatchInterface $route_match): string {
+  switch ($route_name) {
+    case 'help.page.carto':
+      return t('Module de cartographie pour les professionnels en Normandie.');
+
+    default:
+      return '';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function carto_theme(): array {
+  return [
+    'carto' => [
+      'template' => 'carto',
+      'variables' => [
+        'title' => NULL,
+        'isAuditeur' => 0,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_block_alter().
+ */
+function carto_block_alter(array &$definitions): void {
+  if (isset($definitions['carto_map_block'])) {
+    $definitions['carto_map_block']['admin_label'] = t('Carto des partenaires');
+  }
+}

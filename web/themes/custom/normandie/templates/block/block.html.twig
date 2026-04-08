@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ */
+#}
+<div{{ attributes.addClass('block', 'block-' ~ configuration.provider|clean_class, 'block-' ~ plugin_id|clean_class) }}>
+  {% set heading_tag = heading_tag|default('h2') %}
+  {% set heading_id = attributes['id']|render ~ '--label' %}
+  {% if label %}
+    <{{ heading_tag }}{{ title_attributes.addClass('block__title').setAttribute('id', heading_id) }}>
+      {{ label }}
+    </{{ heading_tag }}>
+  {% endif %}
+  {% block content %}
+    <div{{ content_attributes.addClass('block__content') }}>
+      {{ content }}
+    </div>
+  {% endblock %}
+</div>

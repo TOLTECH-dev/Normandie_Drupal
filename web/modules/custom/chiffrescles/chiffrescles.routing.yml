@@ -1,0 +1,392 @@
+chiffrescles.get_nombre_dossiers:
+  path: '/get_nombre_dossiers'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiers'
+    _title: 'Nombre de dossiers'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques:
+  path: '/get_nombre_cheques'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreCheques'
+    _title: 'Nombre de chèques'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_type_cheques:
+  path: '/get_type_cheques'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getTypeCheques'
+    _title: 'Type de chèques'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_auditeurs:
+  path: '/get_nombre_auditeurs'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreAuditeurs'
+    _title: 'Nombre d''auditeurs'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_renovateurs:
+  path: '/get_nombre_renovateurs'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreRenovateurs'
+    _title: 'Nombre de rénovateurs'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_permanences:
+  path: '/get_nombre_permanences'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombrePermanences'
+    _title: 'Nombre de permanences'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_liste_departement:
+  path: '/get_liste_departement'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getListeDepartement'
+    _title: 'Liste des départements'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_liste_ville:
+  path: '/get_liste_ville'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getListeVille'
+    _title: 'Liste des villes'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_liste_epci:
+  path: '/get_liste_epci'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getListeEpci'
+    _title: 'Liste des EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_liste_ville_par_departement:
+  path: '/get_liste_ville_par_departement/{departement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getListeVilleParDepartement'
+    _title: 'Liste des villes par département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    departement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_codedepartement:
+  path: '/get_nombre_dossiers_par_codedepartement/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParCodeDepartement'
+    _title: 'Nombre de dossiers par code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_codedepartement:
+  path: '/get_nombre_cheques_par_codedepartement/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParCodeDepartement'
+    _title: 'Nombre de chèques par code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_auditeurs_par_codedepartement:
+  path: '/get_nombre_auditeurs_par_codedepartement/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreAuditeursParCodeDepartement'
+    _title: 'Nombre d''auditeurs par code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_renovateurs_par_codedepartement:
+  path: '/get_nombre_renovateurs_par_codedepartement/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreRenovateursParCodeDepartement'
+    _title: 'Nombre de rénovateurs par code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_permanences_par_codedepartement:
+  path: '/get_nombre_permanences_par_codedepartement/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombrePermanencesParCodeDepartement'
+    _title: 'Nombre de permanences par code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_ville:
+  path: '/get_nombre_dossiers_par_ville/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParVille'
+    _title: 'Nombre de dossiers par ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_ville:
+  path: '/get_nombre_cheques_par_ville/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParVille'
+    _title: 'Nombre de chèques par ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_auditeurs_par_ville:
+  path: '/get_nombre_auditeurs_par_ville/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreAuditeursParVille'
+    _title: 'Nombre d''auditeurs par ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_renovateurs_par_ville:
+  path: '/get_nombre_renovateurs_par_ville/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreRenovateursParVille'
+    _title: 'Nombre de rénovateurs par ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_permanences_par_ville:
+  path: '/get_nombre_permanences_par_ville/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombrePermanencesParVille'
+    _title: 'Nombre de permanences par ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_epci:
+  path: '/get_nombre_dossiers_par_epci/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParEpci'
+    _title: 'Nombre de dossiers par EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_epci:
+  path: '/get_nombre_cheques_par_epci/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParEpci'
+    _title: 'Nombre de chèques par EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_auditeurs_par_epci:
+  path: '/get_nombre_auditeurs_par_epci/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreAuditeursParEpci'
+    _title: 'Nombre d''auditeurs par EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_renovateurs_par_epci:
+  path: '/get_nombre_renovateurs_par_epci/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreRenovateursParEpci'
+    _title: 'Nombre de rénovateurs par EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_permanences_par_epci:
+  path: '/get_nombre_permanences_par_epci/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombrePermanencesParEpci'
+    _title: 'Nombre de permanences par EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_type_cheque:
+  path: '/get_nombre_dossiers_par_type_cheque/{typecheque}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParTypeCheque'
+    _title: 'Nombre de dossiers par type de chèque'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_type_cheque:
+  path: '/get_nombre_cheques_par_type_cheque/{typecheque}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParTypeCheque'
+    _title: 'Nombre de chèques par type de chèque'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_type_cheque_et_epci:
+  path: '/get_nombre_dossiers_par_type_cheque_et_epci/{typecheque}/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParTypeChequeEtEpci'
+    _title: 'Nombre de dossiers par type de chèque et EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_type_cheque_et_epci:
+  path: '/get_nombre_cheques_par_type_cheque_et_epci/{typecheque}/{epciid}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParTypeChequeEtEpci'
+    _title: 'Nombre de chèques par type de chèque et EPCI'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+    epciid: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_type_cheque_et_codedep:
+  path: '/get_nombre_dossiers_par_type_cheque_et_codedep/{typecheque}/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParTypeChequeEtCodeDep'
+    _title: 'Nombre de dossiers par type de chèque et code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_type_cheque_et_codedep:
+  path: '/get_nombre_cheques_par_type_cheque_et_codedep/{typecheque}/{codedepartement}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParTypeChequeEtCodeDep'
+    _title: 'Nombre de chèques par type de chèque et code département'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+    codedepartement: '^\d{2}$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_dossiers_par_type_cheque_et_ville:
+  path: '/get_nombre_dossiers_par_type_cheque_et_ville/{typecheque}/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreDossiersParTypeChequeEtVille'
+    _title: 'Nombre de dossiers par type de chèque et ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE
+
+chiffrescles.get_nombre_cheques_par_type_cheque_et_ville:
+  path: '/get_nombre_cheques_par_type_cheque_et_ville/{typecheque}/{insee}'
+  defaults:
+    _controller: '\Drupal\chiffrescles\Controller\ChiffresclesController::getNombreChequesParTypeChequeEtVille'
+    _title: 'Nombre de chèques par type de chèque et ville'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    typecheque: '^\d+$'
+    insee: '^\d+$'
+  options:
+    no_cache: TRUE

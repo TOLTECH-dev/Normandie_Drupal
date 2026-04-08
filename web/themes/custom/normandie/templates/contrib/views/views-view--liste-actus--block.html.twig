@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Template for liste_actus view - Block display
+ * Uses Views rendering with D7-compatible slideshow structure
+ */
+#}
+
+{{ attach_library('normandie/theme-scripts') }}
+
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id|clean_class,
+    'view-display-id-' ~ display_id|clean_class,
+    dom_id ? 'view-dom-id-' ~ dom_id|clean_class,
+  ]
+%}
+
+<section id="block-views-liste-actus-block" class="block block-views clearfix">
+  <h2 class="block-title">L'actualité</h2>
+
+  <div{{ attributes.addClass(classes) }}>
+    {% if header %}
+      <div class="view-header">{{ header }}</div>
+    {% endif %}
+
+    <div class="view-content">
+      <div class="skin-default views-slideshow-cycle-processed">
+        <div id="views_slideshow_cycle_main_liste_actus-block_1" class="views_slideshow_cycle_main views_slideshow_main viewsSlideshowCycle-processed" data-once="normandie-views-slideshow-cycle">
+          <div id="views_slideshow_cycle_teaser_section_liste_actus-block_1" class="views-slideshow-cycle-main-frame views_slideshow_cycle_teaser_section" style="position: relative; width: 404px;">
+            
+            {# Render the standard Views output which includes all rows #}
+            {{ rows }}
+            
+          </div>
+        </div>
+        
+        {# Pager controls - structured like D7 #}
+        <div class="views-slideshow-controls-bottom clearfix">
+          <div id="widget_pager_bottom_liste_actus-block_1" class="views-slideshow-pager-fields widget_pager widget_pager_bottom views_slideshow_pager_field views-slideshow-pager-field-processed"></div>
+        </div>
+        
+      </div>
+    </div>
+
+    {# Pager is managed by slideshow JS, not Drupal native pager #}
+    {% if footer %}<div class="view-footer">{{ footer }}</div>{% endif %}
+  </div>
+</section>
+
