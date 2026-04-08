@@ -41,7 +41,11 @@ phpunit.xml.dist
 
 # Local development
 .env
-.env.local
+.env.*
+!.env.example
+
+# SQL dumps
+sql/
 
 
 # Backup files
